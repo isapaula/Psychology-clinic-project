@@ -2,6 +2,6 @@
 
 namespace Models; 
 
-class Professor extends Usuario {
+class Professor  {
 
 } 

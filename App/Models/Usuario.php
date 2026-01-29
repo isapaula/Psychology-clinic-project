@@ -1,12 +1,19 @@
 <?php
 
-namespace Models; 
+namespace Models;
 
-abstract class Usuario {
+use Enums\TipoUsuario;
 
-    protected int $id; 
-    protected string $nome;
-    protected string $email; 
-    protected string $senha;
+class Usuario {
 
+    private int $id; 
+    private string $nome;
+    private string $email; 
+    private string $senha;
+    private TipoUsuario $tipo; 
+
+
+
+
+    
 }
