@@ -11,9 +11,6 @@ class Usuario {
     private string $email; 
     private string $senha;
     private TipoUsuario $tipo; 
-
-
-
-
-    
 }
+
+echo "Estou na model";
