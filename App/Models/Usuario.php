@@ -13,4 +13,4 @@ class Usuario {
     private TipoUsuario $tipo; 
 }
 
-echo "Estou na model";
+

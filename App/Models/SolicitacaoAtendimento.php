@@ -1,10 +1,8 @@
 <?php 
 
+namespace Models;
 use Models\Paciente;
 use Enums\StatusSolicitacao;
-
-
-
 
 class SolicitacaoAtendimento {
 
