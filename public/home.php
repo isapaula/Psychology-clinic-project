@@ -230,7 +230,7 @@ Então as pessoas da comunidade entram em uma fila de triagem para análise e, c
                         </a>
                     </div>
                     <div class="card-content">
-                        <h3 class="card-title">Sessôes</h3>
+                        <h3 class="card-title">Sessões</h3>
                         <p class="light">Itens de lista devem fechar com ponto se formarem sentenças completas. Caso contrário, nenhuma pontuação deve ser usada Itens de lista devem fechar com pont
 
                         </p>
