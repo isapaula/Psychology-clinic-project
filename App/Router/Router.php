@@ -2,29 +2,36 @@
 
 namespace Router;
 
-use Controller\HomeController as Home;
-
-Class Router {
+class Router {
 
 
-    public function dispath(){
+    public function dispatch()
+    {
+        $uri = $_SERVER['REQUEST_URI'];
 
-        $url = $_SERVER['REQUEST_URI']; 
-        
-        $array = explode('/', $url); 
+        $uri = strtok($uri, '?');
 
-        // var_dump($array);
+        $base = '/Psychology-clinic-project/public';
 
-        $n = count($array); 
-
-        //echo "Esse é o count do array: ".$n; 
-
-        if(count($array) <= 5 ){
-            $controller = new Home();
-            $controller->index();
-        
+        if (strpos($uri, $base) === 0) {
+            $uri = substr($uri, strlen($base));
         }
 
-    }
+        $partes = explode('/', trim($uri, '/'));
 
+        $controllerNome = !empty($partes[0]) ? ucfirst($partes[0]) . 'Controller' : 'HomeController';
+
+        $metodo = $partes[1] ?? 'index';
+
+        $controllerClasse = "Controller\\{$controllerNome}";
+
+        if (!class_exists($controllerClasse) || !method_exists($controllerClasse, $metodo)) {
+            http_response_code(404);
+            echo "404 - Página não encontrada!";
+            return;
+        }
+
+        $controller = new $controllerClasse();
+        $controller->$metodo();
+    }
 }

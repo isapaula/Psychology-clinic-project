@@ -1,6 +1,6 @@
 <?php 
 
-namespace Enums; 
+namespace Enums;
 
 enum TipoUsuario: int {
   
@@ -9,5 +9,4 @@ enum TipoUsuario: int {
     case PROFESSOR = 3;
     case GESTAO = 4;
     
-
 }

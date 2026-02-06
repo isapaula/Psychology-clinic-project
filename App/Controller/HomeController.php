@@ -5,13 +5,12 @@ namespace Controller;
 
 class HomeController {
 
+    
     public function index(){
 
-        return 'Psychology-clinic-project/public/home.php';
+        header('Location: http://localhost/Psychology-clinic-project/public/home.html');
+        
     }
 
-    public function login(){
 
-
-    }
 }
