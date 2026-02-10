@@ -11,8 +11,7 @@ class SolicitacaoAtendimento {
     private Paciente $paciente;
     private StatusSolicitacao  $status;
     private $dataCriacao;
-    private $queixaPrincipal; 
-    private array $disponibilidade;
+    private $especialidade; 
     private $observacaoInicial;
 
     
@@ -40,21 +39,6 @@ class SolicitacaoAtendimento {
     {
         return $this->dataCriacao;
     }
-
-
-    public function getDisponibilidade()
-    {
-        return $this->disponibilidade;
-    }
-
-
-    public function setDisponibilidade($disponibilidade)
-    {
-        $this->disponibilidade = $disponibilidade;
-
-        return $this;
-    }
-
 
     public function getObservacaoInicial()
     {
