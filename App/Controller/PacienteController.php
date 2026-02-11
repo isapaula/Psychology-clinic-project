@@ -49,17 +49,30 @@ class PacienteController {
 
             $stmtPaciente->execute([$idUsuario, $dataNascimento, $telefone]);
 
+            $idPaciente = $pdo->lastInsertId(); 
+            
             $pdo->commit();
 
-            echo "Paciente cadastrado com sucesso!";
-            
+            $_SESSION['paciente_id'] = $idPaciente;
+
+            header('Location: /solicitacao/create'); 
+
+            exit;
+
         } catch (\Exception $e) {
 
-            if (isset($pdo) && $pdo->inTransaction()) {
+            if ($pdo->inTransaction()) {
                 $pdo->rollBack();
             }
 
-            echo "Erro ao cadastrar paciente: " . $e->getMessage();
+            error_log("Erro ao cadastrar paciente/usuário".$e->getMessage());
+
+
+            $_SESSION['error'] = "Não foi possível concluir o cadastro.";
+
+
+            header('Location: /paciente/create'); 
+            exit;
         }
     }
 
