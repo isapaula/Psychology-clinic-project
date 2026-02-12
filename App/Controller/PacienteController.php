@@ -54,8 +54,9 @@ class PacienteController {
             $pdo->commit();
 
             $_SESSION['paciente_id'] = $idPaciente;
+            $_SESSION['paciente_nome'] = $nome;
 
-            header('Location: /solicitacao/create'); 
+            header('Location: http://localhost/Psychology-clinic-project/public/solicitacao/create'); 
 
             exit;
 
@@ -71,7 +72,7 @@ class PacienteController {
             $_SESSION['error'] = "Não foi possível concluir o cadastro.";
 
 
-            header('Location: /paciente/create'); 
+            // header('Location: /paciente/create'); 
             exit;
         }
     }
