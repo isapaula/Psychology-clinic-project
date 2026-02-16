@@ -1,9 +1,11 @@
 <?php 
 
-namespace Controller; 
+namespace Controller;
+
+use Database\Conexao;
 
 class PacienteController {
-
+    
     public function index(){
 
         echo "Estou no PacienteController index!!";
@@ -14,17 +16,19 @@ class PacienteController {
         require dirname(__DIR__, 2) . '/App/Views/paciente/PacienteForm.php';
     }
 
+    public function redirectSolicitacao(){
+
+        require dirname(__DIR__, 2). '/App/Views/paciente/SolicitarAtendimentoForm.php';
+    }
+
     public function store(){
+
+        $pdo = Conexao::getConnection();
 
         try {
             
-            $pdo = new \PDO("mysql:host=localhost;dbname=clinica", "root", "root");
-            $pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
-
-            
             $pdo->beginTransaction();
 
-            
             $nome  = $_POST['nome'] ?? null;
             $email = $_POST['email'] ?? null;
             $senha = $_POST['senha'] ?? null;
@@ -56,9 +60,11 @@ class PacienteController {
             $_SESSION['paciente_id'] = $idPaciente;
             $_SESSION['paciente_nome'] = $nome;
 
-            header('Location: http://localhost/Psychology-clinic-project/public/solicitacao/create'); 
+            $this->redirectSolicitacao();
 
-            exit;
+            //header('Location: http://localhost/Psychology-clinic-project/public/solicitacao/create'); 
+
+            //exit;
 
         } catch (\Exception $e) {
 

@@ -1,6 +1,7 @@
 <?php
 
 namespace Controller;
+use Database\Conexao;
 
 class SolicitacaoController {
 
@@ -10,15 +11,18 @@ class SolicitacaoController {
 
     }
 
+    public function areaPaciente(){
+
+        require dirname(__DIR__, 2). '/App/Views/paciente/AreaPaciente.php';
+    }
+
     public function store(){
+
+        $pdo = Conexao::getConnection();
 
         if (isset($_SESSION['paciente_id']) && isset($_SESSION['paciente_nome']) ) {
 
             try {
-
-            $pdo = new \PDO("mysql:host=localhost;dbname=clinica", "root", "root");
-            $pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
-
 
                 $pdo->beginTransaction();
 
@@ -39,8 +43,7 @@ class SolicitacaoController {
 
                 $_SESSION['status_solicitacao'] = $status['status_solicitacao'];
 
-                
-                header('Location: http://localhost/Psychology-clinic-project/App/Views/paciente/AreaPaciente.php');
+                $this->areaPaciente();
 
         
             } catch (\Exception $e) {
@@ -89,5 +92,6 @@ class SolicitacaoController {
         }
 
     }
+
 
 }

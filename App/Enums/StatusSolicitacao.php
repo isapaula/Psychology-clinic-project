@@ -10,3 +10,6 @@ enum StatusSolicitacao: string {
     case RECUSADA = 'RECUSADA/ Tem irregularidade';
 
 }
+
+
+?>
