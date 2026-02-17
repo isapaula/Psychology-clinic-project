@@ -16,7 +16,7 @@ class SessaoController {
 
             $pdo = Conexao::getConnection(); 
 
-            $sql = "SELECT usuario.nome_user, solicitacoes_atendimento.solicitacoes_status, sessao.data_sessao, sessao.hora_inicio , sessao.hora_fim from solicitacoes_atendimento
+            $sql = "SELECT sessao.id_sessao, usuario.nome_user, solicitacoes_atendimento.solicitacoes_status, sessao.data_sessao, sessao.hora_inicio , sessao.hora_fim from solicitacoes_atendimento
                     inner join sessao on solicitacoes_atendimento.id_solicitacao = sessao.id_solicitacao
                     inner join paciente on solicitacoes_atendimento.id_paciente = paciente.id_paciente
                     inner join usuario on paciente.id_usuario = usuario.id_user
@@ -113,7 +113,8 @@ class SessaoController {
                 'id_sessao' => $_POST['id_sessao']
             ]);
 
-            header("Location: /Psychology-clinic-project/public/sessao");
+
+            header("Location: /Psychology-clinic-project/public/sessao/index");
             exit;
 
         } catch (\PDOException $e) {
