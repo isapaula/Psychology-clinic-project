@@ -3,6 +3,7 @@
 namespace Controller;
 
 use Database\Conexao;
+use Controller\SessaoController;
 
 use PDO;
 
@@ -22,10 +23,10 @@ class AlunoController {
 
     public function ListaPacientes(){
 
-        $pdo = Conexao::getConnection(); 
+        $pdo = Conexao::getConnection();  
 
         try {
-
+            // ajustar essa consulta para pegar o id do usuário correto. 
             $sql = "SELECT DISTINCT solicitacoes_atendimento.id_paciente, solicitacoes_atendimento.id_solicitacao, usuario.nome_user, solicitacoes_atendimento.especialidade,solicitacoes_atendimento.horario_desejado, solicitacoes_atendimento.observacao_inicial, solicitacoes_atendimento.solicitacoes_status
                     FROM solicitacoes_atendimento
                     INNER JOIN paciente ON paciente.id_paciente = solicitacoes_atendimento.id_paciente
@@ -69,6 +70,7 @@ class AlunoController {
         }
 
         $idSolicitacao = $_POST['id_solicitacao'];
+        $_SESSION['id_solicitacao'] = $idSolicitacao;
         $idAluno = $_SESSION['id_aluno']; 
 
         $pdo = Conexao::getConnection(); 
@@ -78,8 +80,8 @@ class AlunoController {
         $alterar = $pdo->prepare($sql);
         $alterar->execute([$idAluno, $idSolicitacao]);
 
-        header("Location: /Psychology-clinic-project/public/aluno/listapacientes");
-        exit;
+        $sessao = new SessaoController();
+        $sessao->create();
 
     }
 

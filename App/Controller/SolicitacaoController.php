@@ -66,8 +66,7 @@ class SolicitacaoController {
 
     public function statusSolicitação($idpaciente){
 
-        $pdo = new \PDO("mysql:host=localhost;dbname=clinica", "root", "root");
-        $pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
+        $pdo = Conexao::getConnection();
 
         try {
 
@@ -79,6 +78,7 @@ class SolicitacaoController {
 
             $consulta->execute([ 'id_paciente' => $idpaciente]);
 
+            // dessa forma o sistema pega apenas uma solicitação atendimento do paciente, para pegar todas é necessário o fetchAll. 
             $result  = $consulta->fetch(\PDO::FETCH_ASSOC);
 
             return $result;

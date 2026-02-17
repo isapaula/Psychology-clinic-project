@@ -7,15 +7,34 @@
 </head>
 <body>
 
-<form action="" method="post">
+<form action="/Psychology-clinic-project/public/sessao/store" method="post">
+    <input type="hidden" name="id_solicitacao" value="<?= $_SESSION['id_solicitacao'] ?>">
+    <input type="hidden" name="id_aluno" value="<?= $_SESSION['id_aluno'] ?>">
+    <br>
+    <label for="">Data da sessão:</label>
+    <br>
     <input type="date" name="data_sessao" id="data_sessao">
-    <input type="time" name="hora_inicio" id="hora_inicio">
-    <input type="time" name="hora_final" id="hora_final">
-    <select name="" id="" disabled="disabled">
-        <option value="Realizada">Realizada</option>
-        <option value="Cancelada">Cancelada</option>
-        <option value="Adiada">Adiada</option>
+    <br><br>
+    <label for="">Horário da sessão:</label>
+    <br>
+    <select name="hora_inicio" id="hora_inicio" required>
+        <option value="" disabled selected>Selecione...</option>
+        <option value="10:00">10:00</option>
+        <option value="11:00">11:00</option>
+        <option value="20:00">20:00</option>
+        <option value="20:30">20:30</option>
     </select>
+    <br><br>
+    <label for="">Termino da sessão:</label>
+    <br>
+    <select name="hora_final" id="hora_final" required>
+        <option value="" disabled selected>Selecione...</option>
+        <option value="10:00">10:00</option>
+        <option value="11:00">11:00</option>
+        <option value="20:00">20:00</option>
+        <option value="20:30">20:30</option>
+    </select>
+    <br><br>
     <button type="submit">Salvar sessão</button>
 </form>
     
