@@ -5,19 +5,76 @@ namespace Controller;
 use Database\Conexao;
 use Controller\SessaoController;
 
-use PDO;
 
 class AlunoController {
 
     public function create(){
-
+        require dirname(__DIR__, 2) . '/App/Views/Aluno/FormAluno.php'; 
     }
 
-    public function store(){
+    public function store() {
+
+         $pdo = Conexao::getConnection();
+
+        try {
+            
+            $pdo->beginTransaction();
+
+            $nome  = $_POST['nome'] ?? null;
+            $email = $_POST['email'] ?? null;
+            $senha = $_POST['senha'] ?? null;
+            $matricula = $_POST['matricula'] ?? null;
+            $semestre = $_POST['semestre'] ?? null;
+            
+            $senhaHash = password_hash($senha, PASSWORD_DEFAULT);
+
+            $stmtUser = $pdo->prepare("
+                INSERT INTO usuario (nome_user, email_user, senha_user)
+                VALUES (?, ?, ?)
+            ");
+
+            $stmtUser->execute([$nome, $email, $senhaHash]);
+
+            $idUsuario = $pdo->lastInsertId();
+
+            $stmtAluno = $pdo->prepare("
+                INSERT INTO aluno (id_usuario, matricula , semestre )
+                VALUES (?, ?, ?);
+            ");
+
+            $stmtAluno->execute([$idUsuario, $matricula, $semestre]);
+
+            $idAluno = $pdo->lastInsertId(); 
+            
+            $pdo->commit();
+
+            $_SESSION['aluno_id'] = $idAluno;
+            $_SESSION['aluno_nome'] = $nome;
+
+            $this->ListaPacientes();
+
+
+        } catch (\Exception $e) {
+
+            if ($pdo->inTransaction()) {
+                $pdo->rollBack();
+            }
+
+            error_log("Erro ao cadastrar aluno/usuário".$e->getMessage());
+
+
+            $_SESSION['error'] = "Não foi possível concluir o cadastro.";
+
+
+            // header('Location: /paciente/create'); 
+            exit;
+        }
 
     }
 
     public function AreaAluno(){
+
+        require dirname(__DIR__, 2). '/App/Views/Aluno/AreaAluno.php';
 
     }
 
@@ -37,18 +94,10 @@ class AlunoController {
             
             $solicitacoes = $dados->fetchAll(\PDO::FETCH_ASSOC); 
 
-            /*$array = array(
-                'id' => $result[0],
-                'Paciente' => $result[1],
-                'Especialidade' => $result[2],
-                'Horário desejado' => $result[3],
-                'Observação' => $result[4],
-                'Status da solicitação' => $result[5] 
-            );*/
 
             $_SESSION['id_aluno'] = 1;
 
-            require dirname(__DIR__, 2). '/App/Views/Aluno/AreaAluno.php';
+            $this->AreaAluno();
             
 
         } catch (\Exception $e) {
