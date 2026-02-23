@@ -9,13 +9,15 @@
 
     <h2>Cadastro do Aluno</h2>
     <form action="/Psychology-clinic-project/public/aluno/store" method="post">
+        
         <input type="text" name="nome" id="nome" placeholder="Digite o nome">
         <br><br>
         <input type="email" name="email" id="email" placeholder="Digite o e-mail">
         <br><br>
+        <label for="">Digite a senha:</label><br>
         <input type="password" name="senha" id="senha">
         <br><br>
-        <input type="number" name="matricula" id="matricula" placeholder="digite sua matricula">
+        <input type="number" name="matricula" id="matricula" maxlength="5" placeholder="digite sua matricula">
         <br><br>
         <input type="number" name="semestre" id="semestre" maxlength="1" placeholder="Qual semestre?">
         <br><br>

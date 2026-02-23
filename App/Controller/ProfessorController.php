@@ -6,6 +6,71 @@ use Database\Conexao;
 
 class ProfessorController {
 
+    public function create(){
+
+        require dirname(__DIR__, 2 ). '/App/Views/professor/formProfessor.php';
+
+    }
+
+    public function store() {
+
+         $pdo = Conexao::getConnection();
+
+        try {
+            
+            $pdo->beginTransaction();
+
+            $nome  = $_POST['nome'] ?? null;
+            $email = $_POST['email'] ?? null;
+            $senha = $_POST['senha'] ?? null;
+            $rp = $_POST['rp'] ?? null;
+            
+            $senhaHash = password_hash($senha, PASSWORD_DEFAULT);
+
+            $stmtUser = $pdo->prepare("
+                INSERT INTO usuario (nome_user, email_user, senha_user)
+                VALUES (?, ?, ?)
+            ");
+
+            $stmtUser->execute([$nome, $email, $senhaHash]);
+
+            $idUsuario = $pdo->lastInsertId();
+
+            $stmtProfessor = $pdo->prepare("
+                INSERT INTO professor (id_usuario, registro_profissional)
+                VALUES (?, ?);
+            ");
+
+            $stmtProfessor->execute([$idUsuario, $rp]);
+
+            $idprofessor = $pdo->lastInsertId(); 
+            
+            $pdo->commit();
+
+            $_SESSION['professor_id'] = $idprofessor;
+            $_SESSION['professor_nome'] = $nome;
+
+            $this->listarSolicitacoes($idprofessor);
+
+
+        } catch (\Exception $e) {
+
+            if ($pdo->inTransaction()) {
+                $pdo->rollBack();
+            }
+
+            error_log("Erro ao cadastrar professor/usuário".$e->getMessage());
+
+
+            $_SESSION['error'] = "Não foi possível concluir o cadastro.";
+
+
+            // header('Location: /paciente/create'); 
+            exit;
+        }
+
+    }
+
     public function index(){
 
         require dirname(__DIR__, 2). '/App/Views/professor/AreaProfessor.php';
@@ -25,7 +90,7 @@ class ProfessorController {
         
     }
 
-    public function listarSolicitacoes(){
+    public function listarSolicitacoes($idprof){
 
         try {
 
@@ -39,6 +104,8 @@ class ProfessorController {
             $result = $pdo->query($sql);
 
             $array = $result->fetchAll(\PDO::FETCH_ASSOC);
+
+            $_SESSION['professor_id'] = $idprof;
 
             $this->index();
 

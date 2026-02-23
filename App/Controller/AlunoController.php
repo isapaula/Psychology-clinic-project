@@ -9,6 +9,7 @@ use Controller\SessaoController;
 class AlunoController {
 
     public function create(){
+
         require dirname(__DIR__, 2) . '/App/Views/Aluno/FormAluno.php'; 
     }
 
@@ -51,7 +52,7 @@ class AlunoController {
             $_SESSION['aluno_id'] = $idAluno;
             $_SESSION['aluno_nome'] = $nome;
 
-            $this->ListaPacientes();
+            //$this->MeusCasos($idAluno);
 
 
         } catch (\Exception $e) {
@@ -78,24 +79,27 @@ class AlunoController {
 
     }
 
-    public function ListaPacientes(){
+    public function MeusCasos($id_aluno){
 
         $pdo = Conexao::getConnection();  
 
         try {
-            // ajustar essa consulta para pegar o id do usuário correto. 
-            $sql = "SELECT DISTINCT solicitacoes_atendimento.id_paciente, solicitacoes_atendimento.id_solicitacao, usuario.nome_user, solicitacoes_atendimento.especialidade,solicitacoes_atendimento.horario_desejado, solicitacoes_atendimento.observacao_inicial, solicitacoes_atendimento.solicitacoes_status
+            
+            $sql = "SELECT solicitacoes_atendimento.id_paciente, solicitacoes_atendimento.id_solicitacao, usuario.nome_user, solicitacoes_atendimento.especialidade,solicitacoes_atendimento.horario_desejado, solicitacoes_atendimento.observacao_inicial, solicitacoes_atendimento.solicitacoes_status
                     FROM solicitacoes_atendimento
                     INNER JOIN paciente ON paciente.id_paciente = solicitacoes_atendimento.id_paciente
-                    INNER JOIN usuario ON usuario.id_user = paciente.id_usuario;"; 
+                    INNER JOIN usuario ON usuario.id_user = paciente.id_usuario
+                    WHERE solicitacoes_atendimento.id_aluno = :id_aluno and solicitacoes_atendimento.solicitacoes_status = 'APROVADA'
+                    ;"; 
 
             
-            $dados = $pdo->query($sql);
-            
-            $solicitacoes = $dados->fetchAll(\PDO::FETCH_ASSOC); 
+            $meuscasos = $pdo->prepare($sql);
+             
+            $meuscasos->execute([$id_aluno]);
 
+            $solicitacoes = $meuscasos->fetchAll(\PDO::FETCH_ASSOC); 
 
-            $_SESSION['id_aluno'] = 1;
+            $_SESSION['id_solicitacao'] = $solicitacoes['id_solicitacao'];
 
             $this->AreaAluno();
             
