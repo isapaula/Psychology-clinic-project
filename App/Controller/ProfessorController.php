@@ -101,16 +101,18 @@ class ProfessorController {
                     INNER JOIN usuario ON usuario.id_user = paciente.id_usuario 
                     WHERE solicitacoes_atendimento.solicitacoes_status = 'AGUARDANDO_TRIAGEM' and id_aluno is null;";
 
-            $result = $pdo->query($sql);
+            $result = $pdo->prepare($sql);
 
-            $array = $result->fetchAll(\PDO::FETCH_ASSOC);
+            $result->execute();
+
+            $arraySolicitacoes = $result->fetchAll(\PDO::FETCH_ASSOC);
 
             $_SESSION['professor_id'] = $idprof;
 
-            $this->index();
+            require dirname(__DIR__, 2). '/App/Views/professor/AreaProfessor.php';
 
 
-        } catch (\PDOException $e) {
+        } catch (\Exception $e) {
 
             error_log("Erro ao carregar as solicitações na tela do professor! ". $e->getMessage());
             echo "Erro ao carregar as solicitações na tela do professor! ". $e->getMessage();

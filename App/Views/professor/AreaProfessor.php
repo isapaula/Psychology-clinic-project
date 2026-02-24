@@ -19,7 +19,7 @@
             <th>Observação</th>
             <th>Status da solicitação</th>
         </tr>
-        <?php foreach ($array as $value): ?>
+        <?php foreach ($arraySolicitacoes as $value): ?>
         <tr>
             <td><?= $value['nome_user'] ?></td>
             <td><?= $value['especialidade'] ?></td>
