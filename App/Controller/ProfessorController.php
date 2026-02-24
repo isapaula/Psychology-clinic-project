@@ -87,7 +87,7 @@ class ProfessorController {
     $id = $_POST['id_solicitacao'] ?? null;
 
     if (!$id) {
-        require dirname(__DIR__, 2). '/App/Views/professor/AreaProfessor.php';
+        header("Location: /Psychology-clinic-project/public/professor/listarSolicitacoes");
         exit;
     }
 
@@ -126,7 +126,7 @@ class ProfessorController {
 
         $pdo->commit();
 
-        require dirname(__DIR__, 2). '/App/Views/professor/AreaProfessor.php';
+        header("Location: /Psychology-clinic-project/public/professor/listarSolicitacoes");
         exit;
 
     } catch (\Exception $e) {
@@ -137,13 +137,70 @@ class ProfessorController {
 
         error_log($e->getMessage());
 
-        require dirname(__DIR__, 2). '/App/Views/professor/AreaProfessor.php';
+        header("Location: /Psychology-clinic-project/public/professor/listarSolicitacoes");
         exit;
     }
 }
 
-    public function recusada(){
-        
+    public function recusada() 
+    {
+
+        $id = $_POST['id_solicitacao'] ?? null;
+
+        if (!$id) {
+            header("Location: /Psychology-clinic-project/public/professor/listarSolicitacoes");
+            exit;
+        }
+
+        $pdo = Conexao::getConnection();
+
+        try {
+
+            $pdo->beginTransaction();
+
+            
+            $stmt = $pdo->prepare("
+                SELECT solicitacoes_status 
+                FROM solicitacoes_atendimento 
+                WHERE id_solicitacao = ?
+            ");
+
+            $stmt->execute([$id]);
+            $solicitacao = $stmt->fetch(\PDO::FETCH_ASSOC);
+
+            if (!$solicitacao) {
+                throw new \Exception("Solicitação não encontrada.");
+            }
+
+            if ($solicitacao['solicitacoes_status'] !== 'AGUARDANDO_TRIAGEM') {
+                throw new \Exception("Solicitação não pode ser recusada.");
+            }
+
+            
+            $update = $pdo->prepare("
+                UPDATE solicitacoes_atendimento
+                SET solicitacoes_status = 'RECUSADA'
+                WHERE id_solicitacao = ?
+            ");
+
+            $update->execute([$id]);
+
+            $pdo->commit();
+
+            header("Location: /Psychology-clinic-project/public/professor/listarSolicitacoes");
+            exit;
+
+        } catch (\Exception $e) {
+
+            if ($pdo->inTransaction()) {
+                $pdo->rollBack();
+            }
+
+            error_log($e->getMessage());
+
+            header("Location: /Psychology-clinic-project/public/professor/listarSolicitacoes");
+            exit;
+        }
     }
 
     public function listarSolicitacoes(){

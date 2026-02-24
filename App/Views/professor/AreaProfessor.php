@@ -28,13 +28,13 @@
             <td><?= $value['solicitacoes_status'] ?></td>
             <td>
                 <form action="/Psychology-clinic-project/public/professor/aprovada" method="post">
-                    <input type="hidden" name="id_solicitacao" value="<?= $key['id_solicitacao'] ?>">
+                    <input type="hidden" name="id_solicitacao" id="id_solicitacao" value="<?= $value['id_solicitacao'] ?>">
                     <button type="submit">Aceitar</button>
                 </form>
             </td>
             <td>
                 <form action="/Psychology-clinic-project/public/professor/recusada" method="post">
-                    <input type="hidden" name="id_solicitacao" value="<?= $key['id_solicitacao'] ?>">
+                    <input type="hidden" name="id_solicitacao" id="id_solicitacao" value="<?= $value['id_solicitacao'] ?>">
                     <button type="submit">Recusar</button>
                 </form>
             </td>
