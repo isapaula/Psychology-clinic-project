@@ -50,7 +50,7 @@ class ProfessorController {
             $_SESSION['professor_id'] = $idprofessor;
             $_SESSION['professor_nome'] = $nome;
 
-            $this->listarSolicitacoes($idprofessor);
+            $this->listarSolicitacoes();
 
 
         } catch (\Exception $e) {
@@ -82,15 +82,71 @@ class ProfessorController {
 
     }
 
-    public function aprovada(){
+    public function aprovada() {
 
+    $id = $_POST['id_solicitacao'] ?? null;
+
+    if (!$id) {
+        require dirname(__DIR__, 2). '/App/Views/professor/AreaProfessor.php';
+        exit;
     }
+
+    $pdo = Conexao::getConnection();
+
+    try {
+
+        $pdo->beginTransaction();
+
+        // 1️⃣ Buscar status atual
+        $stmt = $pdo->prepare("
+            SELECT solicitacoes_status 
+            FROM solicitacoes_atendimento 
+            WHERE id_solicitacao = ?
+        ");
+
+        $stmt->execute([$id]);
+        $solicitacao = $stmt->fetch(\PDO::FETCH_ASSOC);
+
+        if (!$solicitacao) {
+            throw new \Exception("Solicitação não encontrada.");
+        }
+
+        if ($solicitacao['solicitacoes_status'] !== 'AGUARDANDO_TRIAGEM') {
+            throw new \Exception("Solicitação não pode ser aprovada.");
+        }
+
+        // 2️⃣ Atualizar status
+        $update = $pdo->prepare("
+            UPDATE solicitacoes_atendimento
+            SET solicitacoes_status = 'APROVADA'
+            WHERE id_solicitacao = ?
+        ");
+
+        $update->execute([$id]);
+
+        $pdo->commit();
+
+        require dirname(__DIR__, 2). '/App/Views/professor/AreaProfessor.php';
+        exit;
+
+    } catch (\Exception $e) {
+
+        if ($pdo->inTransaction()) {
+            $pdo->rollBack();
+        }
+
+        error_log($e->getMessage());
+
+        require dirname(__DIR__, 2). '/App/Views/professor/AreaProfessor.php';
+        exit;
+    }
+}
 
     public function recusada(){
         
     }
 
-    public function listarSolicitacoes($idprof){
+    public function listarSolicitacoes(){
 
         try {
 
@@ -99,15 +155,13 @@ class ProfessorController {
             $sql = "SELECT solicitacoes_atendimento.id_solicitacao, usuario.nome_user, solicitacoes_atendimento.especialidade, solicitacoes_atendimento.horario_desejado, solicitacoes_atendimento.observacao_inicial, solicitacoes_atendimento.solicitacoes_status FROM  solicitacoes_atendimento
                     INNER JOIN paciente ON solicitacoes_atendimento.id_paciente = paciente.id_paciente
                     INNER JOIN usuario ON usuario.id_user = paciente.id_usuario 
-                    WHERE solicitacoes_atendimento.solicitacoes_status = 'AGUARDANDO_TRIAGEM' and id_aluno is null;";
+                    WHERE solicitacoes_atendimento.solicitacoes_status = 'AGUARDANDO_TRIAGEM';";
 
             $result = $pdo->prepare($sql);
 
             $result->execute();
 
             $arraySolicitacoes = $result->fetchAll(\PDO::FETCH_ASSOC);
-
-            $_SESSION['professor_id'] = $idprof;
 
             require dirname(__DIR__, 2). '/App/Views/professor/AreaProfessor.php';
 
