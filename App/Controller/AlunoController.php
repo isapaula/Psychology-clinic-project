@@ -8,6 +8,13 @@ use Controller\SessaoController;
 
 class AlunoController {
 
+
+    public function index(){
+
+        require dirname(__DIR__, 2). '/App/Views/Aluno/AreaAluno.php';
+
+    }
+
     public function create(){
 
         require dirname(__DIR__, 2) . '/App/Views/Aluno/FormAluno.php'; 
@@ -73,12 +80,6 @@ class AlunoController {
 
     }
 
-    public function AreaAluno(){
-
-        require dirname(__DIR__, 2). '/App/Views/Aluno/AreaAluno.php';
-
-    }
-
     public function MeusCasos($id_aluno){
 
         $pdo = Conexao::getConnection();  
@@ -100,7 +101,7 @@ class AlunoController {
             $solicitacoes = $meuscasos->fetchAll(\PDO::FETCH_ASSOC); 
 
             if (count($solicitacoes) > 0) {
-                
+
                 $_SESSION['id_solicitacao'] = $solicitacoes['id_solicitacao'];
                 
             }

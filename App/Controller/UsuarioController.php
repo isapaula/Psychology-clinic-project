@@ -15,43 +15,32 @@ class UsuarioController {
 
         try {
 
-        $pdo = Conexao::getConnection();
-        
-        $login = isset($_POST['user']) ? $_POST['user'] : "Usuário/e-mail inválido!";
-        $pass = isset($_POST['pass']) ? $_POST['pass'] : "Senha inválida!";
-        $senhaHash = password_hash($pass, PASSWORD_DEFAULT);
+            $pdo = Conexao::getConnection(); 
 
-        $smtp = $pdo->prepare("SELECT usuario.email_user, usuario.senha_user  FROM usuario WHERE email_user = ? OR senha_user = ?");
+            $login = $_POST['user'] ?? null;
+            $pass = $_POST['pass'] ?? null; 
 
-        $smtp->execute([$login, $senhaHash]); 
+            $sql = "SELECT id_user, nome_user, email_user, senha_user, id_papel FROM usuario WHERE email_user = ? ;";
 
-        $row = $smtp->fetchAll(\PDO::FETCH_ASSOC); 
+            $query = $pdo->prepare($sql); 
 
-        if (count($row) > 0) {
-            $_SESSION['usuario'] = $login;
-            $_SESSION['senha'] = $senhaHash;
+            $usuario = $pdo->execute([$login]);
 
-            echo "usuario logado";
-        }else if(count($row) == 0){
-            echo "Não foi possível logar usuário!";
-        }
+            if ($usuario && password_hash($pass, $usuario['senha_user'])) {
+                
+                session_start(); 
+
+                
+            }
             
+            
+
+
+
         } catch (\Exception $e) {
-
-            echo "Erro ao logar:  ". $e->getMessage();
             
         }
-
+        
     }
 
-    public function deslogar(){
-
-    }
-
-    public function selecaoPerfil(){
-
-    }
-
-
-
-}                                                                                 
+}                                                                                

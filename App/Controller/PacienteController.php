@@ -8,7 +8,7 @@ class PacienteController {
     
     public function index(){
 
-        echo "Estou no PacienteController index!!";
+        require dirname(__DIR__, 2) .'/App/Views/paciente/AreaPaciente.php'; 
     }
 
     public function create(){
@@ -62,9 +62,6 @@ class PacienteController {
 
             $this->redirectSolicitacao();
 
-            //header('Location: http://localhost/Psychology-clinic-project/public/solicitacao/create'); 
-
-            //exit;
 
         } catch (\Exception $e) {
 
