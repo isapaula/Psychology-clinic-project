@@ -7,7 +7,14 @@ use Models\Usuario;
 class UsuarioController {
 
 
-    private Usuario $usuario;
+    public function login(){
+
+    }
+
+    public function deslogar(){
+
+    }
+    
 
 
 }                                                                                 

@@ -232,4 +232,8 @@ class ProfessorController {
 
     }
 
+    public function todasSolicitacoes (){
+
+    }
+
 }
