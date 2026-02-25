@@ -6,7 +6,7 @@ use Database\Conexao;
 use Controller\SessaoController;
 
 
-class AlunoController {
+class AlunoController extends BaseController {
 
 
     public function index(){

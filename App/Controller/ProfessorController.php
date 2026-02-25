@@ -4,7 +4,7 @@ namespace Controller;
 
 use Database\Conexao;
 
-class ProfessorController {
+class ProfessorController extends BaseController {
 
 
     public function index(){
