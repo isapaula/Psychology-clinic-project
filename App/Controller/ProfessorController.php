@@ -28,8 +28,8 @@ class ProfessorController {
             $senhaHash = password_hash($senha, PASSWORD_DEFAULT);
 
             $stmtUser = $pdo->prepare("
-                INSERT INTO usuario (nome_user, email_user, senha_user)
-                VALUES (?, ?, ?)
+                INSERT INTO usuario (nome_user, email_user, senha_user, id_papel)
+                VALUES (?, ?, ?, 3)
             ");
 
             $stmtUser->execute([$nome, $email, $senhaHash]);

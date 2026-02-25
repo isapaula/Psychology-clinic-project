@@ -42,6 +42,14 @@
         <?php endforeach; ?>
 
     </table>
+
+
+    <h4>Solicitações aprovadas</h4>
+
+    <table border=1>
+        
+
+    </table>
     
 </body>
 </html>

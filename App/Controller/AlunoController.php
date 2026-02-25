@@ -30,8 +30,8 @@ class AlunoController {
             $senhaHash = password_hash($senha, PASSWORD_DEFAULT);
 
             $stmtUser = $pdo->prepare("
-                INSERT INTO usuario (nome_user, email_user, senha_user)
-                VALUES (?, ?, ?)
+                INSERT INTO usuario (nome_user, email_user, senha_user, id_papel)
+                VALUES (?, ?, ?, 2)
             ");
 
             $stmtUser->execute([$nome, $email, $senhaHash]);
@@ -52,7 +52,7 @@ class AlunoController {
             $_SESSION['aluno_id'] = $idAluno;
             $_SESSION['aluno_nome'] = $nome;
 
-            //$this->MeusCasos($idAluno);
+            $this->MeusCasos($idAluno);
 
 
         } catch (\Exception $e) {
@@ -89,7 +89,7 @@ class AlunoController {
                     FROM solicitacoes_atendimento
                     INNER JOIN paciente ON paciente.id_paciente = solicitacoes_atendimento.id_paciente
                     INNER JOIN usuario ON usuario.id_user = paciente.id_usuario
-                    WHERE solicitacoes_atendimento.id_aluno = :id_aluno and solicitacoes_atendimento.solicitacoes_status = 'APROVADA'
+                    WHERE solicitacoes_atendimento.id_aluno = ? and solicitacoes_atendimento.solicitacoes_status = 'APROVADA'
                     ;"; 
 
             
@@ -99,9 +99,13 @@ class AlunoController {
 
             $solicitacoes = $meuscasos->fetchAll(\PDO::FETCH_ASSOC); 
 
-            $_SESSION['id_solicitacao'] = $solicitacoes['id_solicitacao'];
+            if (count($solicitacoes) > 0) {
+                
+                $_SESSION['id_solicitacao'] = $solicitacoes['id_solicitacao'];
+                
+            }
 
-            $this->AreaAluno();
+            require dirname(__DIR__, 2 ). '/App/Views/Aluno/AreaAluno.php';
             
 
         } catch (\Exception $e) {

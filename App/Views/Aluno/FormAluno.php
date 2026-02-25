@@ -15,7 +15,7 @@
         <input type="email" name="email" id="email" placeholder="Digite o e-mail">
         <br><br>
         <label for="">Digite a senha:</label><br>
-        <input type="password" name="senha" id="senha">
+        <input type="password" name="senha" id="senha" placeholder="********">
         <br><br>
         <input type="number" name="matricula" id="matricula" maxlength="5" placeholder="digite sua matricula">
         <br><br>
