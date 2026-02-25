@@ -22,22 +22,46 @@ class UsuarioController {
 
             $sql = "SELECT id_user, nome_user, email_user, senha_user, id_papel FROM usuario WHERE email_user = ? ;";
 
-            $query = $pdo->prepare($sql); 
+            $stmt = $pdo->prepare($sql); 
 
-            $usuario = $pdo->execute([$login]);
+            $stmt->execute([$login]);
 
-            if ($usuario && password_hash($pass, $usuario['senha_user'])) {
+            $usuario = $stmt->fetch(\PDO::FETCH_ASSOC);
+
+            if ($usuario && password_verify($pass, $usuario['senha_user'])) {
                 
                 session_start(); 
 
-                
+                $_SESSION['user_id']    = $usuario['id_user'];
+                $_SESSION['user_nome']  = $usuario['nome_user'];
+                $_SESSION['user_papel'] = $usuario['id_papel'];
+
+                switch ($usuario['id_papel']) {
+
+                    case 1:
+                        require dirname(__DIR__, 2) .'/App/Views/paciente/AreaPaciente.php';
+                        break;
+
+                    case 2:
+                        require dirname(__DIR__, 2) .'/App/Views/Aluno/AreaAluno.php';
+                        break;
+
+                    case 3:
+                        require dirname(__DIR__, 2) . '/App/Views/professor/AreaProfessor.php';
+                        break;
+                    
+                    default:
+                        header('Location: /Psychology-clinic-project/public/usuario/login');
+                        break;
+                }
+
+            }else{
+                echo "E-mail inválido!";
             }
-            
-            
-
-
 
         } catch (\Exception $e) {
+            error_log("Erro ao logar no sistema: ". $e->getMessage());
+            echo "Erro ao logar no sistema: ".$e->getMessage();
             
         }
         

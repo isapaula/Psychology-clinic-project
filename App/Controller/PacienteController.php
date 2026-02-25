@@ -75,8 +75,6 @@ class PacienteController {
             $_SESSION['error'] = "Não foi possível concluir o cadastro.";
 
 
-            // header('Location: /paciente/create'); 
-            exit;
         }
     }
 

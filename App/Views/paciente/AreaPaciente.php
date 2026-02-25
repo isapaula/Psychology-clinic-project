@@ -6,7 +6,7 @@
     <title>Área do Paciente</title>
 </head>
 <body>
-    <h1>Bem vindo! <?php echo  $_SESSION['paciente_nome']; ?></h1>
+    <h1>Bem vindo, Paciente! <?php  echo  $_SESSION['paciente_nome']; ?></h1>
     <h3>Sua solicitação está: <?php echo $_SESSION['status_solicitacao']; ?></h3>
 
 
