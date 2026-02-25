@@ -61,6 +61,7 @@ class AlunoController {
 
             $this->MeusCasos($idAluno);
 
+            exit;
 
         } catch (\Exception $e) {
 
@@ -107,6 +108,8 @@ class AlunoController {
             }
 
             require dirname(__DIR__, 2 ). '/App/Views/Aluno/AreaAluno.php';
+
+            exit;
             
 
         } catch (\Exception $e) {
@@ -114,6 +117,8 @@ class AlunoController {
             error_log("Erro ao listar paciente: ".$e->getMessage()); 
 
             echo "Erro ao listar paciente: ".$e->getMessage();
+
+            exit;
             
         }
 

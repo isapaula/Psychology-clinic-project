@@ -8,6 +8,9 @@ class PacienteController {
     
     public function index(){
 
+        // $this->verificaAutorizacao();
+        
+
         require dirname(__DIR__, 2) .'/App/Views/paciente/AreaPaciente.php'; 
     }
 
@@ -16,7 +19,7 @@ class PacienteController {
         require dirname(__DIR__, 2) . '/App/Views/paciente/PacienteForm.php';
     }
 
-    public function redirectSolicitacao(){
+    public function SolicitarAtendimento(){
 
         require dirname(__DIR__, 2). '/App/Views/paciente/SolicitarAtendimentoForm.php';
     }
@@ -58,10 +61,11 @@ class PacienteController {
             $pdo->commit();
 
             $_SESSION['paciente_id'] = $idPaciente;
-            $_SESSION['paciente_nome'] = $nome;
+            $_SESSION['nome_user'] = $nome;
 
-            $this->redirectSolicitacao();
+            $this->SolicitarAtendimento();
 
+            exit;
 
         } catch (\Exception $e) {
 
@@ -74,8 +78,20 @@ class PacienteController {
 
             $_SESSION['error'] = "Não foi possível concluir o cadastro.";
 
+            exit;
 
         }
+    }
+
+    public function MinhaSolicitacao($id_paciente){
+
+        try {
+            
+            
+        } catch (\Throwable $th) {
+            //throw $th;
+        }
+
     }
 
     

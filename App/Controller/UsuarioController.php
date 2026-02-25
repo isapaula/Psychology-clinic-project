@@ -39,15 +39,15 @@ class UsuarioController {
                 switch ($usuario['id_papel']) {
 
                     case 1:
-                        require dirname(__DIR__, 2) .'/App/Views/paciente/AreaPaciente.php';
+                        header('Location: /Psychology-clinic-project/public/paciente/index');
                         break;
 
                     case 2:
-                        require dirname(__DIR__, 2) .'/App/Views/Aluno/AreaAluno.php';
+                        header('Location: /Psychology-clinic-project/public/aluno/index');
                         break;
 
                     case 3:
-                        require dirname(__DIR__, 2) . '/App/Views/professor/AreaProfessor.php';
+                        header('Location: /Psychology-clinic-project/public/professor/index');
                         break;
                     
                     default:
@@ -55,8 +55,10 @@ class UsuarioController {
                         break;
                 }
 
+                exit;
+
             }else{
-                echo "E-mail inválido!";
+                echo "E-mail ou senha inválidos!";
             }
 
         } catch (\Exception $e) {

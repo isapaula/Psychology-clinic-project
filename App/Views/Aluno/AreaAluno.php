@@ -20,7 +20,7 @@
 
         <?php foreach ($solicitacoes as $key): ?>
         <tr>
-            <td><?=  $key['nome_user'] ?></td>
+            <td><?=  $key['user_nome'] ?></td>
             <td><?=  $key['especialidade'] ?></td>
             <td><?=  $key['horario_desejado'] ?></td>
             <td><?=  $key['observacao_inicial'] ?></td>
