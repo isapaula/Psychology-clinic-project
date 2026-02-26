@@ -9,6 +9,8 @@ class ProfessorController extends BaseController {
 
     public function index(){
 
+        $this->verificarAutenticacao(3);
+
         require dirname(__DIR__, 2). '/App/Views/professor/AreaProfessor.php';
 
     }

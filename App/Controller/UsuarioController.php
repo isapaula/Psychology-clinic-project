@@ -30,7 +30,7 @@ class UsuarioController {
 
             if ($usuario && password_verify($pass, $usuario['senha_user'])) {
                 
-                session_start(); 
+                //session_start(); 
 
                 $_SESSION['user_id']    = $usuario['id_user'];
                 $_SESSION['user_nome']  = $usuario['nome_user'];

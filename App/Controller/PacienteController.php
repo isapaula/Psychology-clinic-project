@@ -8,9 +8,10 @@ class PacienteController extends BaseController {
     
     public function index(){
 
-        // $this->verificaAutorizacao();
-        
+        $this->verificarAutenticacao(1);
 
+        $this->MinhaSolicitacao($_SESSION['user_id']);
+        
         require dirname(__DIR__, 2) .'/App/Views/paciente/AreaPaciente.php'; 
     }
 
@@ -83,13 +84,34 @@ class PacienteController extends BaseController {
         }
     }
 
-    public function MinhaSolicitacao($id_paciente){
+    public function MinhaSolicitacao($id_user){
 
         try {
+
+            $pdo = Conexao::getConnection();
+
+            $sql = "SELECT solicitacoes_atendimento.solicitacoes_status  FROM solicitacoes_atendimento
+                    INNER JOIN paciente ON  solicitacoes_atendimento.id_paciente = paciente.id_paciente
+                    INNER JOIN usuario  ON paciente.id_usuario = usuario.id_user
+                    WHERE usuario.id_user = ?;";
             
-            
-        } catch (\Throwable $th) {
-            //throw $th;
+            $query = $pdo->prepare($sql); 
+
+            $query->execute([$id_user]);
+
+            $dados = $query->fetch(\PDO::FETCH_ASSOC); 
+
+            $statusSolicitacao = $dados['solicitacoes_status'];
+
+            if (count($dados) > 0) {
+                
+                $_SESSION['status_solicitacao'] = $statusSolicitacao;
+            }
+
+            return $_SESSION['status_solicitacao']; 
+
+        } catch (\Exception $e) {
+            echo "Não foi possível pegar as solicitações do paciente: ". $e->getMessage();
         }
 
     }
