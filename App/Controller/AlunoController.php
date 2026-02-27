@@ -18,74 +18,6 @@ class AlunoController extends BaseController {
         $this->casosDisponiveis();
     }
 
-    public function create(){
-        
-
-        require dirname(__DIR__, 2) . '/App/Views/Aluno/FormAluno.php'; 
-    }
-
-    public function store() {
-        
-
-         $pdo = Conexao::getConnection();
-
-        try {
-            
-            $pdo->beginTransaction();
-
-            $nome  = $_POST['nome'] ?? null;
-            $email = $_POST['email'] ?? null;
-            $senha = $_POST['senha'] ?? null;
-            $matricula = $_POST['matricula'] ?? null;
-            $semestre = $_POST['semestre'] ?? null;
-            
-            $senhaHash = password_hash($senha, PASSWORD_DEFAULT);
-
-            $stmtUser = $pdo->prepare("
-                INSERT INTO usuario (nome_user, email_user, senha_user, id_papel)
-                VALUES (?, ?, ?, 2)
-            ");
-
-            $stmtUser->execute([$nome, $email, $senhaHash]);
-
-            $idUsuario = $pdo->lastInsertId();
-
-            $stmtAluno = $pdo->prepare("
-                INSERT INTO aluno (id_usuario, matricula , semestre )
-                VALUES (?, ?, ?);
-            ");
-
-            $stmtAluno->execute([$idUsuario, $matricula, $semestre]);
-
-            $idAluno = $pdo->lastInsertId(); 
-            
-            $pdo->commit();
-
-            $_SESSION['aluno_id'] = $idAluno;
-            $_SESSION['aluno_nome'] = $nome;
-
-            $this->index();
-
-            exit;
-
-        } catch (\Exception $e) {
-
-            if ($pdo->inTransaction()) {
-                $pdo->rollBack();
-            }
-
-            error_log("Erro ao cadastrar aluno/usuário".$e->getMessage());
-
-
-            $_SESSION['error'] = "Não foi possível concluir o cadastro.";
-
-
-            // header('Location: /paciente/create'); 
-            exit;
-        }
-
-    }
-
     public function casosDisponiveis(){
 
         try {
@@ -102,8 +34,10 @@ class AlunoController extends BaseController {
 
             require dirname(__DIR__, 2 ). '/App/Views/Aluno/AreaAluno.php';
 
-        } catch (\Throwable $th) {
-            //throw $th;
+        } catch (\Exception $e) {
+
+            echo "Deu erro ao listar casos disponíveis! ".$e->getMessage();  
+            
         }
     }
 
@@ -154,21 +88,24 @@ class AlunoController extends BaseController {
     public function assumir(){
         
         
-        if(!isset($_SESSION['aluno_id'])){
+        if(!isset($_SESSION['user_id'])){
             echo "Aluno não autenticado!"; 
             return;
         }
 
         $idSolicitacao = $_POST['id_solicitacao'];
         $_SESSION['id_solicitacao'] = $idSolicitacao;
-        $idAluno = $_SESSION['aluno_id']; 
+        $iduser = $_SESSION['user_id']; 
 
         $pdo = Conexao::getConnection(); 
 
-        $sql = "UPDATE solicitacoes_atendimento SET solicitacoes_status = 'EM_TRIAGEM', id_aluno = ? WHERE id_solicitacao = ? ";
+        $sql = "UPDATE solicitacoes_atendimento 
+        SET solicitacoes_status = 'EM_TRIAGEM',
+        id_aluno = (SELECT aluno.id_aluno FROM aluno WHERE id_usuario = ?) 
+        WHERE id_solicitacao = ?;";
         
         $alterar = $pdo->prepare($sql);
-        $alterar->execute([$idAluno, $idSolicitacao]);
+        $alterar->execute([$iduser, $idSolicitacao]);
 
         $sessao = new SessaoController();
         $sessao->create();

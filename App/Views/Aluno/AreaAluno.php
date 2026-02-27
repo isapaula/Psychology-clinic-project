@@ -7,7 +7,7 @@
 </head>
 <body>
 
-    <h1>Área do Aluno!</h1>
+    <h1>Área do Aluno! <?php  echo  $_SESSION['user_nome']; ?></h1>
 
     <table border="1">
         <tr>
