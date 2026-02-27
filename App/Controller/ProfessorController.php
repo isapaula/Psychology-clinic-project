@@ -6,22 +6,26 @@ use Database\Conexao;
 
 class ProfessorController extends BaseController {
 
+    public function __construct()
+    {
+        $this->verificarAutenticacao(3);
+    }
 
     public function index(){
 
-        $this->verificarAutenticacao(3);
-
-        require dirname(__DIR__, 2). '/App/Views/professor/AreaProfessor.php';
+        $this->listarSolicitacoes();
 
     }
 
     public function create(){
+    
 
         require dirname(__DIR__, 2 ). '/App/Views/professor/formProfessor.php';
 
     }
 
     public function store() {
+    
 
          $pdo = Conexao::getConnection();
 
@@ -81,6 +85,7 @@ class ProfessorController extends BaseController {
     }
 
     public function aprovada() {
+    
 
         $id = $_POST['id_solicitacao'] ?? null;
 
@@ -139,6 +144,7 @@ class ProfessorController extends BaseController {
     }
 
     public function recusada() {
+    
 
         $id = $_POST['id_solicitacao'] ?? null;
 
@@ -207,16 +213,13 @@ class ProfessorController extends BaseController {
             $sql = "SELECT solicitacoes_atendimento.id_solicitacao, usuario.nome_user, solicitacoes_atendimento.especialidade, solicitacoes_atendimento.horario_desejado, solicitacoes_atendimento.observacao_inicial, solicitacoes_atendimento.solicitacoes_status FROM  solicitacoes_atendimento
                     INNER JOIN paciente ON solicitacoes_atendimento.id_paciente = paciente.id_paciente
                     INNER JOIN usuario ON usuario.id_user = paciente.id_usuario 
-                    WHERE solicitacoes_atendimento.solicitacoes_status = 'AGUARDANDO_TRIAGEM';";
+                    WHERE solicitacoes_atendimento.solicitacoes_status = 'AGUARDANDO_TRIAGEM'";
 
-            $result = $pdo->prepare($sql);
-
-            $result->execute();
+            $result = $pdo->query($sql);
 
             $arraySolicitacoes = $result->fetchAll(\PDO::FETCH_ASSOC);
 
             require dirname(__DIR__, 2). '/App/Views/professor/AreaProfessor.php';
-
 
         } catch (\Exception $e) {
 
@@ -226,6 +229,10 @@ class ProfessorController extends BaseController {
         }
 
     }
+
+    
+
+
 
 
 }

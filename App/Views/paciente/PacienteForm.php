@@ -3,11 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../../public/assets/css/materialize.css">
     <title>Formulário Paciente</title>
 </head>
 <body>
+    
     <h2>Cadastro do Paciente</h2>
-    <form action="/Psychology-clinic-project/public/paciente/store" method="post">
+    <form action="/Psychology-clinic-project/public/auth/paciente" method="post">
         <input type="text" name="nome" id="nome" placeholder="Digite o nome">
         <br><br>
         <input type="email" name="email" id="email" placeholder="Digite o e-mail">

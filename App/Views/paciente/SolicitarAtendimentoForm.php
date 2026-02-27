@@ -6,6 +6,8 @@
     <title>Solicitação Atendimento</title>
 </head>
 <body>
+    <h2>Seja bem vindo!</h2>
+    <h3>Por gentileza, solicite um atendimento preenchendo os campos abaixo.</h3>
     <form action="/Psychology-clinic-project/public/solicitacao/store" method="post">
         <input type="text" name="especialidade" id="especialidade" placeholder="Informe a especialidade">
         <br><br>

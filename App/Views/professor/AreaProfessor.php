@@ -44,12 +44,7 @@
     </table>
 
 
-    <h4>Solicitações aprovadas</h4>
-
-    <table border=1>
-        
-
-    </table>
+    <h4>Solicitações Analisadas</h4>
     
 </body>
 </html>

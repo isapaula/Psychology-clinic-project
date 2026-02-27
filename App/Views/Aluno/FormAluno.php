@@ -8,7 +8,7 @@
 <body>
 
     <h2>Cadastro do Aluno</h2>
-    <form action="/Psychology-clinic-project/public/aluno/store" method="post">
+    <form action="/Psychology-clinic-project/public/usuario/store" method="post">
         
         <input type="text" name="nome" id="nome" placeholder="Digite o nome">
         <br><br>

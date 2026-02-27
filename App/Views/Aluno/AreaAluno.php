@@ -18,9 +18,9 @@
             <th>Status</th>
         </tr>
 
-        <?php foreach ($solicitacoes as $key): ?>
+        <?php foreach ($solicitacoesDisponiveis as $key): ?>
         <tr>
-            <td><?=  $key['user_nome'] ?></td>
+            <td><?=  $key['nome_user'] ?></td>
             <td><?=  $key['especialidade'] ?></td>
             <td><?=  $key['horario_desejado'] ?></td>
             <td><?=  $key['observacao_inicial'] ?></td>

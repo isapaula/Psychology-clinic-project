@@ -5,16 +5,18 @@ namespace Controller;
 use Database\Conexao;
 
 class PacienteController extends BaseController {
+
+    public function __construct()
+    {
+        $this->verificarAutenticacao(1);
+    }
     
     public function index(){
 
-        $this->verificarAutenticacao(1);
-
-        $this->MinhaSolicitacao($_SESSION['user_id']);
-        
-        require dirname(__DIR__, 2) .'/App/Views/paciente/AreaPaciente.php'; 
+        $this->MinhaSolicitacao($_SESSION['user_id']); 
     }
 
+    // esse método precisa sair daqui. 
     public function create(){
   
         require dirname(__DIR__, 2) . '/App/Views/paciente/PacienteForm.php';
@@ -101,20 +103,27 @@ class PacienteController extends BaseController {
 
             $dados = $query->fetch(\PDO::FETCH_ASSOC); 
 
-            $statusSolicitacao = $dados['solicitacoes_status'];
+            if (is_array($dados)) {
 
-            if (count($dados) > 0) {
+                $statusSolicitacao = $dados['solicitacoes_status'];
                 
                 $_SESSION['status_solicitacao'] = $statusSolicitacao;
+
+                require dirname(__DIR__, 2) .'/App/Views/paciente/AreaPaciente.php';
+
+
+            }else{
+
+             $this->SolicitarAtendimento();
+
             }
 
-            return $_SESSION['status_solicitacao']; 
+           // return $_SESSION['status_solicitacao']; 
 
         } catch (\Exception $e) {
             echo "Não foi possível pegar as solicitações do paciente: ". $e->getMessage();
         }
 
     }
-
     
 }

@@ -8,21 +8,24 @@ use Controller\SessaoController;
 
 class AlunoController extends BaseController {
 
+    public function __construct(){
+
+          $this->verificarAutenticacao(2);
+    }
 
     public function index(){
 
-        $this->verificarAutenticacao(2);
-
-        require dirname(__DIR__, 2). '/App/Views/Aluno/AreaAluno.php';
-
+        $this->casosDisponiveis();
     }
 
     public function create(){
+        
 
         require dirname(__DIR__, 2) . '/App/Views/Aluno/FormAluno.php'; 
     }
 
     public function store() {
+        
 
          $pdo = Conexao::getConnection();
 
@@ -61,7 +64,7 @@ class AlunoController extends BaseController {
             $_SESSION['aluno_id'] = $idAluno;
             $_SESSION['aluno_nome'] = $nome;
 
-            $this->MeusCasos($idAluno);
+            $this->index();
 
             exit;
 
@@ -83,7 +86,29 @@ class AlunoController extends BaseController {
 
     }
 
+    public function casosDisponiveis(){
+
+        try {
+            $pdo = Conexao::getConnection();
+
+            $sql = "SELECT solicitacoes_atendimento.id_solicitacao, usuario.nome_user, solicitacoes_atendimento.especialidade, solicitacoes_atendimento.horario_desejado, solicitacoes_atendimento.observacao_inicial, solicitacoes_atendimento.solicitacoes_status FROM  solicitacoes_atendimento
+                    INNER JOIN paciente ON solicitacoes_atendimento.id_paciente = paciente.id_paciente
+                    INNER JOIN usuario ON usuario.id_user = paciente.id_usuario 
+                    WHERE solicitacoes_atendimento.solicitacoes_status = 'APROVADA' AND solicitacoes_atendimento.id_aluno IS NULL;";
+
+            $result = $pdo->query($sql); 
+
+            $solicitacoesDisponiveis = $result->fetchAll(\PDO::FETCH_ASSOC);
+
+            require dirname(__DIR__, 2 ). '/App/Views/Aluno/AreaAluno.php';
+
+        } catch (\Throwable $th) {
+            //throw $th;
+        }
+    }
+
     public function MeusCasos($id_aluno){
+        
 
         $pdo = Conexao::getConnection();  
 
@@ -124,19 +149,19 @@ class AlunoController extends BaseController {
             
         }
 
-
     }
 
     public function assumir(){
-
-        if(!isset($_SESSION['id_aluno'])){
+        
+        
+        if(!isset($_SESSION['aluno_id'])){
             echo "Aluno não autenticado!"; 
             return;
         }
 
         $idSolicitacao = $_POST['id_solicitacao'];
         $_SESSION['id_solicitacao'] = $idSolicitacao;
-        $idAluno = $_SESSION['id_aluno']; 
+        $idAluno = $_SESSION['aluno_id']; 
 
         $pdo = Conexao::getConnection(); 
 

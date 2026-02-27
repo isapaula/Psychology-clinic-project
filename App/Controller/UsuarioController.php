@@ -29,8 +29,6 @@ class UsuarioController {
             $usuario = $stmt->fetch(\PDO::FETCH_ASSOC);
 
             if ($usuario && password_verify($pass, $usuario['senha_user'])) {
-                
-                //session_start(); 
 
                 $_SESSION['user_id']    = $usuario['id_user'];
                 $_SESSION['user_nome']  = $usuario['nome_user'];

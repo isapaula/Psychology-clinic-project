@@ -18,37 +18,34 @@ class SolicitacaoController {
 
     public function store(){
 
-        $pdo = Conexao::getConnection();
+        $especialidade = $_POST['especialidade'] ?? null;
+        $horario_desejado = $_POST['selectHora'] ?? null;
+        $observacao = $_POST['observacao'] ?? null; 
 
-        if (isset($_SESSION['paciente_id']) && isset($_SESSION['paciente_nome']) ) {
+        if (isset($_SESSION['user_id'])) {
+
+            $iduser = $_SESSION['user_id'];
+
+            $pdo = Conexao::getConnection();
 
             try {
 
                 $pdo->beginTransaction();
 
-                $id_paciente = $_SESSION['paciente_id']; 
-                $especialidade = $_POST['especialidade'];
-                $horario_desejado = $_POST['selectHora'];
-                $observacao = $_POST['observacao']; 
+                $stmt = $pdo->prepare("INSERT INTO solicitacoes_atendimento
+                        (id_paciente, especialidade, horario_desejado, observacao_inicial) VALUES 
+                        ((SELECT paciente.id_paciente FROM paciente WHERE paciente.id_usuario = ?  ) , ?,  ? , ? );
+                    ");
 
-                $stmpSolicitacao = $pdo->prepare(
-                    "INSERT INTO solicitacoes_atendimento (id_paciente, especialidade, horario_desejado, observacao_inicial) VALUES (?, ?, ?, ? );"
-                );
-
-                $stmpSolicitacao->execute([$id_paciente, $especialidade, $horario_desejado, $observacao]);
+                $stmt->execute([$iduser, $especialidade, $horario_desejado, $observacao]);
 
                 $pdo->commit();
 
-                $status  = $this->statusSolicitação($id_paciente);
+                echo "Solicitação criada com sucesso!"; 
 
-                $_SESSION['status_solicitacao'] = $status['status_solicitacao'];
-
-                $this->areaPaciente();
-
-        
             } catch (\Exception $e) {
 
-                if ($pdo->inTransaction()) {
+               if ($pdo->inTransaction()) {
                     $pdo->rollBack();
                 }
 
@@ -61,7 +58,7 @@ class SolicitacaoController {
         }else{
             echo "Não foi possível criar a solicitação de atendimento!";
         }
-
+    
     }
 
     public function statusSolicitação($idpaciente){

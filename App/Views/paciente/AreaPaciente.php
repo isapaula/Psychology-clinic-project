@@ -8,8 +8,5 @@
 <body>
     <h1>Bem vindo, Paciente! <?php  echo  $_SESSION['user_nome']; ?></h1>
     <h3>Sua solicitação está: <?php echo $_SESSION['status_solicitacao']; ?></h3>
-
-   
-    
 </body>
 </html>
