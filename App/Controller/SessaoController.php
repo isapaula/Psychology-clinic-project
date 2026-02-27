@@ -8,23 +8,22 @@ class SessaoController {
 
     public function index(){
 
-        if (isset($_SESSION['id_aluno'])) {
+        if (isset($_SESSION['user_id'])) {
 
-            $idAluno = $_SESSION['id_aluno']; 
+            $iduser = $_SESSION['user_id']; 
             
             try {
 
             $pdo = Conexao::getConnection(); 
 
-            $sql = "SELECT sessao.id_sessao, usuario.nome_user, solicitacoes_atendimento.solicitacoes_status, sessao.data_sessao, sessao.hora_inicio , sessao.hora_fim from solicitacoes_atendimento
-                    inner join sessao on solicitacoes_atendimento.id_solicitacao = sessao.id_solicitacao
-                    inner join paciente on solicitacoes_atendimento.id_paciente = paciente.id_paciente
-                    inner join usuario on paciente.id_usuario = usuario.id_user
-                    where sessao.id_aluno = :id_aluno ;";
+            $sql = "SELECT sessao.id_sessao, sessao.nome_paciente, solicitacoes_atendimento.solicitacoes_status, sessao.data_sessao, sessao.hora_inicio , sessao.hora_fim, status_sessao FROM solicitacoes_atendimento
+            INNER JOIN aluno ON solicitacoes_atendimento.id_aluno = aluno.id_aluno
+            INNER JOIN sessao ON sessao.id_solicitacao = solicitacoes_atendimento.id_solicitacao
+            WHERE aluno.id_usuario = ? ;";
 
             $select =  $pdo->prepare($sql);
 
-            $select->execute(['id_aluno' => $idAluno]); 
+            $select->execute([$iduser]); 
 
             $result = $select->fetchAll(\PDO::FETCH_ASSOC);
 
@@ -51,16 +50,17 @@ class SessaoController {
 
         $pdo = Conexao::getConnection();
 
-        if (isset($_SESSION['id_solicitacao'])  && isset($_SESSION['id_aluno'])) {
+        if (isset($_SESSION['id_solicitacao'])  && isset($_SESSION['user_id']) && $_SESSION['nome_paciente']) {
 
             try {
 
                 $pdo->beginTransaction();
 
-                $sql = "INSERT INTO sessao (id_solicitacao, id_aluno, data_sessao, hora_inicio, hora_fim) VALUES (?, ?, ?, ?, ?);";
+                $sql = "INSERT INTO sessao (id_solicitacao, id_aluno, nome_paciente,  data_sessao, hora_inicio, hora_fim) VALUES (?, (SELECT aluno.id_aluno FROM aluno WHERE aluno.id_usuario = ? ), ?, ?, ?, ?);";
 
                 $idSolic = $_SESSION['id_solicitacao'];
-                $idAluno = $_SESSION['id_aluno'];
+                $iduser = $_SESSION['user_id'];
+                $nome_paciente = $_SESSION['nome_paciente']; 
                 $datasessao = $_POST['data_sessao'];
                 $horainicio = $_POST['hora_inicio'];
                 $horafinal = $_POST['hora_final']; 
@@ -68,7 +68,7 @@ class SessaoController {
 
                 $insert = $pdo->prepare($sql);
 
-                $insert->execute([$idSolic, $idAluno, $datasessao, $horainicio, $horafinal]);
+                $insert->execute([$idSolic, $iduser, $nome_paciente, $datasessao, $horainicio, $horafinal]);
 
                 $pdo->commit();
 
@@ -95,31 +95,30 @@ class SessaoController {
 
         if (!isset($_POST['id_sessao'], $_POST['status'])) {
             echo "Dados inválidos.";
-            return;
+            
         }
+
+        $status = $_POST['status'];
+        $idSessao = $_POST['id_sessao'];
 
         try {
 
             $pdo = Conexao::getConnection();
 
             $sql = "UPDATE sessao 
-                    SET status_sessao = :status 
-                    WHERE id_sessao = :id_sessao";
+                    SET status_sessao = ? 
+                    WHERE id_sessao = ? ";
 
             $update = $pdo->prepare($sql);
 
-            $update->execute([
-                'status' => $_POST['status'],
-                'id_sessao' => $_POST['id_sessao']
-            ]);
-
+            $update->execute([$status, $idSessao]);
 
             header("Location: /Psychology-clinic-project/public/sessao/index");
             exit;
 
-        } catch (\PDOException $e) {
+        } catch (\Exception $e) {
             error_log("Erro ao atualizar status da sessão: " . $e->getMessage());
-            echo "Não foi possível atualizar o status da sessão.";
+            echo "Não foi possível atualizar o status da sessão." . $e->getMessage();
         }
     }
 

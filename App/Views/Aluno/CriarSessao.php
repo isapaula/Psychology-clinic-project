@@ -8,8 +8,8 @@
 <body>
 
 <form action="/Psychology-clinic-project/public/sessao/store" method="post">
-    <input type="hidden" name="id_solicitacao" value="<?= $_SESSION['id_solicitacao'] ?>">
-    <input type="hidden" name="aluno_id" value="<?= $_SESSION['aluno_id'] ?>">
+    <input type="hidden" name="id_solicitacao" value="<?= $_SESSION['id_solicitacao'] ?>" >
+    <input type="hidden" name="user_id" value="<?= $_SESSION['user_id'] ?>">
     <br>
     <label for="">Data da sessão:</label>
     <br>

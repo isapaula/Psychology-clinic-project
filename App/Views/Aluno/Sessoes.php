@@ -15,14 +15,16 @@
             <th>Data da sessão</th>
             <th>Horário da sessão</th>
             <th>Termino da sessão</th>
+            <th>Status da Sessão</th>
         </tr>
         <?php foreach($result as $key): ?>
         <tr>
-              <td><?= $key['nome_user']  ?></td>
+              <td><?= $key['nome_paciente']  ?></td>
               <td><?= $key['solicitacoes_status']  ?></td>
               <td><?= $key['data_sessao']  ?></td>
               <td><?= $key['hora_inicio']  ?></td>
               <td><?= $key['hora_fim']  ?></td>
+              <td><?= $key['status_sessao'] ?></td>
               <td>
                 <form action="/Psychology-clinic-project/public/sessao/updateStatus" method="post">
                     <input type="hidden" id="id_sessao" name="id_sessao" value="<?= $key['id_sessao'] ?>">
