@@ -118,8 +118,6 @@ class PacienteController extends BaseController {
 
             }
 
-           // return $_SESSION['status_solicitacao']; 
-
         } catch (\Exception $e) {
             echo "Não foi possível pegar as solicitações do paciente: ". $e->getMessage();
         }

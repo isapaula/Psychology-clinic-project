@@ -41,7 +41,9 @@ class SolicitacaoController {
 
                 $pdo->commit();
 
-                echo "Solicitação criada com sucesso!"; 
+                $paciente = new PacienteController();
+                $paciente->index();
+                 
 
             } catch (\Exception $e) {
 
