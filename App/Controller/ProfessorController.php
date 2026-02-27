@@ -212,13 +212,28 @@ class ProfessorController extends BaseController {
 
             $sql = "SELECT solicitacoes_atendimento.id_solicitacao, usuario.nome_user, solicitacoes_atendimento.especialidade, solicitacoes_atendimento.horario_desejado, solicitacoes_atendimento.observacao_inicial, solicitacoes_atendimento.solicitacoes_status FROM  solicitacoes_atendimento
                     INNER JOIN paciente ON solicitacoes_atendimento.id_paciente = paciente.id_paciente
-                    INNER JOIN usuario ON usuario.id_user = paciente.id_usuario 
-                    WHERE solicitacoes_atendimento.solicitacoes_status = 'AGUARDANDO_TRIAGEM'";
+                    INNER JOIN usuario ON usuario.id_user = paciente.id_usuario;";
 
             $result = $pdo->query($sql);
 
-            $arraySolicitacoes = $result->fetchAll(\PDO::FETCH_ASSOC);
+            $dados = $result->fetchAll(\PDO::FETCH_ASSOC);
 
+            $SolicitacoesPendentes = [];
+            $solicitacoesAnalisadas = [];
+
+            foreach ($dados as $dado) {
+
+                switch ($dado['solicitacoes_status']) {
+                    case 'AGUARDANDO_TRIAGEM':
+                        $SolicitacoesPendentes[] = $dado;
+                        break;
+                    
+                    default:
+                        $solicitacoesAnalisadas[] = $dado;
+                        break;
+                }
+                
+            }
             require dirname(__DIR__, 2). '/App/Views/professor/AreaProfessor.php';
 
         } catch (\Exception $e) {

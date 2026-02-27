@@ -19,7 +19,7 @@
             <th>Observação</th>
             <th>Status da solicitação</th>
         </tr>
-        <?php foreach ($arraySolicitacoes as $value): ?>
+        <?php foreach ($SolicitacoesPendentes as $value): ?>
         <tr>
             <td><?= $value['nome_user'] ?></td>
             <td><?= $value['especialidade'] ?></td>
@@ -45,6 +45,26 @@
 
 
     <h4>Solicitações Analisadas</h4>
+
+        <table border="1">
+        <tr>
+            <th>Nome do paciente</th>
+            <th>Especialidade</th>
+            <th>Horário desejado</th>
+            <th>Observação</th>
+            <th>Status da solicitação</th>
+        </tr>
+        <?php foreach ($solicitacoesAnalisadas as $key): ?>
+        <tr>
+            <td><?= $key['nome_user'] ?></td>
+            <td><?= $key['especialidade'] ?></td>
+            <td><?= $key['horario_desejado'] ?></td>
+            <td><?= $key['observacao_inicial'] ?></td>
+            <td><?= $key['solicitacoes_status'] ?></td>
+        </tr>
+        <?php endforeach; ?>
+
+    </table>
     
 </body>
 </html>
