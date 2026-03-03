@@ -33,6 +33,7 @@ A V1 foi construída com foco em:
 - Separação por Controllers
 - Controle de acesso centralizado (BaseController)
 - Front Controller para roteamento
+- Fluxo funcional completo
 - Estrutura preparada para evolução para camada de Service e Repository na V2
 
 # Tecnologias
