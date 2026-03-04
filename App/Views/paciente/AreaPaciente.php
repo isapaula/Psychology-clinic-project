@@ -6,7 +6,9 @@
     <title>Área do Paciente</title>
 </head>
 <body>
-    <h1>Bem vindo, Paciente! <?php  echo  $_SESSION['user_nome']; ?></h1>
-    <h3>Sua solicitação está: <?php echo $_SESSION['status_solicitacao']; ?></h3>
+    <h1>Bem vindo, Paciente!</h1>
+    <h1><?php  echo  $_SESSION['user_nome']; ?></h1>
+    <h3>Sua solicitação está:</h3>
+    <h3><?php echo $_SESSION['status_solicitacao']; ?></h3>
 </body>
 </html>

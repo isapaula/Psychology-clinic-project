@@ -7,7 +7,8 @@
 </head>
 <body>
 
-    <h3>Bem vindo, Professor! <?php  echo  $_SESSION['user_nome']; ?></h3>
+    <h3>Bem vindo, Professor!</h3>
+    <h3><?php  echo  $_SESSION['user_nome']; ?></h3>
 
     <h4>Segue as solicitações recentes para a sua análise!</h4>
 
