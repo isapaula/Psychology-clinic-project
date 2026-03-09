@@ -3,87 +3,113 @@
 namespace Controller;
 
 use Database\Conexao;
+use PDO;
 
 class AuthController {
 
     public function paciente(){
 
-        try {
+                $nome  = !empty($_POST['nome']) ? $_POST['nome'] : null;
+                $email = !empty($_POST['email']) ? $_POST['email'] : null;
+                $senha = !empty($_POST['senha']) ? $_POST['senha'] : null;
+                $emailValido = filter_var($email, FILTER_VALIDATE_EMAIL);
+                $dataNascimento = !empty($_POST['data_nasc']) ? $_POST['data_nasc']: null ;
+                $telefone = !empty($_POST['telefone']) ? $_POST['telefone'] : null;
+                $telefoneLimpo = str_replace(array('.', '-', '(', ')'), '', $telefone);
+                $telefoneValido = filter_var($telefoneLimpo, FILTER_VALIDATE_INT);
+                        
+                        if(empty($senha)) {
+                          $senhaNova = null;
+                        }else{
+                            $senhaNova = password_hash($senha, PASSWORD_DEFAULT);
+                        }
 
-            $pdo = Conexao::getConnection();
+                try {
 
-            $pdo->beginTransaction();
+                    $pdo = Conexao::getConnection();
 
-            $nome  = $_POST['nome'] ?? null;
-            $email = $_POST['email'] ?? null;
-            $senha = $_POST['senha'] ?? null;
-            $dataNascimento = $_POST['data_nasc'] ?? null;
-            $telefone = $_POST['telefone'] ?? null;
+                    $pdo->beginTransaction();
+
+                    $stmtUser = $pdo->prepare("
+                        INSERT INTO usuario (nome_user, email_user, senha_user, id_papel)
+                        VALUES (:nome, :email, :senha, 1)
+                    ");
+
+                    $stmtUser->bindValue(':nome', $nome, PDO::PARAM_STR);
+                    $stmtUser->bindValue(':email', $emailValido, PDO::PARAM_STR);
+                    $stmtUser->bindValue(':senha', $senhaNova, PDO::PARAM_STR);
+
+                    $stmtUser->execute();
+
+                    $idUsuario = $pdo->lastInsertId();
+
+                    $stmtPaciente = $pdo->prepare("
+                        INSERT INTO paciente (id_usuario, data_nascimento, telefone)
+                        VALUES (?, ?, ?)
+                    ");
+
+                    $stmtPaciente->execute([$idUsuario, $dataNascimento, $telefoneValido]);
+
+                    $idPaciente = $pdo->lastInsertId();
+
+                    $_SESSION['paciente_id'] = $idPaciente;
+                    
+                    $pdo->commit();
+
+                    header('Location: /Psychology-clinic-project/public/usuario/login');
+                    exit;
+
+                } catch (\Exception $e) {
+
+                if ($pdo->inTransaction()) {
+
+                        $pdo->rollBack();
+                    }
+
+                    error_log("Erro ao cadastrar paciente/usuário: ".$e->getMessage());
+
+                    echo "Erro ao cadastrar paciente/usuário: ".$e->getMessage();
+
+                    exit;
+
+                }
             
-            $senhaHash = password_hash($senha, PASSWORD_DEFAULT);
 
-            $stmtUser = $pdo->prepare("
-                INSERT INTO usuario (nome_user, email_user, senha_user, id_papel)
-                VALUES (?, ?, ?, 1)
-            ");
-
-            $stmtUser->execute([$nome, $email, $senhaHash]);
-
-            $idUsuario = $pdo->lastInsertId();
-
-            $stmtPaciente = $pdo->prepare("
-                INSERT INTO paciente (id_usuario, data_nascimento, telefone)
-                VALUES (?, ?, ?)
-            ");
-
-            $stmtPaciente->execute([$idUsuario, $dataNascimento, $telefone]);
-
-            $idPaciente = $pdo->lastInsertId();
-
-            $_SESSION['paciente_id'] = $idPaciente;
-            
-            $pdo->commit();
-
-            header('Location: /Psychology-clinic-project/public/usuario/login');
-            exit;
-
-        } catch (\Exception $e) {
-
-           if ($pdo->inTransaction()) {
-
-                $pdo->rollBack();
-            }
-
-            error_log("Erro ao cadastrar paciente/usuário".$e->getMessage());
-
-            echo "Erro ao cadastrar paciente/usuário".$e->getMessage();
-
-            exit;
-
-        }
 
     }
 
     public function professor(){
+
+                $nome  = !empty($_POST['nome']) ? $_POST['nome'] : null;
+                $email = !empty($_POST['email']) ? $_POST['email'] : null;
+                $senha = !empty($_POST['senha']) ? $_POST['senha'] : null;
+                $emailValido = filter_var($email, FILTER_VALIDATE_EMAIL);
+                $rp = !empty($_POST['rp']) ? $_POST['rp']: null;
+                
+                
+
+                        if(empty($senha)) {
+                          $senhaNova = null;
+                        }else{
+                            $senhaNova = password_hash($senha, PASSWORD_DEFAULT);
+                        }
+
         try {
 
             $pdo = Conexao::getConnection();
 
             $pdo->beginTransaction();
 
-            $nome  = $_POST['nome'] ?? null;
-            $email = $_POST['email'] ?? null;
-            $senha = $_POST['senha'] ?? null;
-            $rp = $_POST['rp'] ?? null;
-            
-            $senhaHash = password_hash($senha, PASSWORD_DEFAULT);
-
             $stmtUser = $pdo->prepare("
                 INSERT INTO usuario (nome_user, email_user, senha_user, id_papel)
-                VALUES (?, ?, ?, 3)
+                        VALUES (:nome, :email, :senha, 3)
             ");
 
-            $stmtUser->execute([$nome, $email, $senhaHash]);
+            $stmtUser->bindValue(':nome', $nome, PDO::PARAM_STR);
+            $stmtUser->bindValue(':email', $emailValido, PDO::PARAM_STR);
+            $stmtUser->bindValue(':senha', $senhaNova, PDO::PARAM_STR);
+
+            $stmtUser->execute();
 
             $idUsuario = $pdo->lastInsertId();
 
@@ -110,9 +136,9 @@ class AuthController {
                 $pdo->rollBack();
             }
 
-            error_log("Erro ao cadastrar professor/usuário".$e->getMessage());
+            error_log("Erro ao cadastrar professor/usuário: ".$e->getMessage());
 
-            echo "Erro ao cadastrar professor/usuário".$e->getMessage();
+            echo "Erro ao cadastrar professor/usuário: ".$e->getMessage();
 
             exit;
 
@@ -122,26 +148,36 @@ class AuthController {
 
     public function aluno(){
 
-        $pdo = Conexao::getConnection();
+
+                $nome  = !empty($_POST['nome']) ? $_POST['nome'] : null;
+                $email = !empty($_POST['email']) ? $_POST['email'] : null;
+                $senha = !empty($_POST['senha']) ? $_POST['senha'] : null;
+                $emailValido = filter_var($email, FILTER_VALIDATE_EMAIL);
+                $matricula = !empty($_POST['matricula']) ? $_POST['matricula'] : null;
+                $semestre = $_POST['semestre'] ?? null;
+
+                        if(empty($senha)) {
+                          $senhaNova = null;
+                        }else{
+                            $senhaNova = password_hash($senha, PASSWORD_DEFAULT);
+                        }
 
         try {
+
+            $pdo = Conexao::getConnection();
             
             $pdo->beginTransaction();
 
-            $nome  = $_POST['nome'] ?? null;
-            $email = $_POST['email'] ?? null;
-            $senha = $_POST['senha'] ?? null;
-            $matricula = $_POST['matricula'] ?? null;
-            $semestre = $_POST['semestre'] ?? null;
-            
-            $senhaHash = password_hash($senha, PASSWORD_DEFAULT);
-
             $stmtUser = $pdo->prepare("
                 INSERT INTO usuario (nome_user, email_user, senha_user, id_papel)
-                VALUES (?, ?, ?, 2)
+                        VALUES (:nome, :email, :senha, 2)
             ");
 
-            $stmtUser->execute([$nome, $email, $senhaHash]);
+            $stmtUser->bindValue(':nome', $nome, PDO::PARAM_STR);
+            $stmtUser->bindValue(':email', $emailValido, PDO::PARAM_STR);
+            $stmtUser->bindValue(':senha', $senhaNova, PDO::PARAM_STR);
+
+            $stmtUser->execute();
 
             $idUsuario = $pdo->lastInsertId();
 
