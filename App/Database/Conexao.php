@@ -1,9 +1,9 @@
-<?php 
+<?php
 
 namespace Database;
 
-class Conexao {
-
+class Conexao
+{
     public $host;
     public $db;
     public $user;
@@ -11,7 +11,8 @@ class Conexao {
 
     private static $instance = null;
 
-    public static function getConnection() {
+    public static function getConnection()
+    {
 
         $host = $_ENV['DB_HOST'];
         $db = $_ENV['DB_DATABASE'];
@@ -22,7 +23,7 @@ class Conexao {
 
             try {
 
-                self::$instance = new \PDO("mysql:host=".$host.";dbname=". $db, $user , $pass);
+                self::$instance = new \PDO("mysql:host=".$host.";dbname=". $db, $user, $pass);
 
                 self::$instance->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
 
@@ -35,5 +36,3 @@ class Conexao {
     }
 
 }
-
-

@@ -5,94 +5,96 @@ namespace Controller;
 use Database\Conexao;
 use PDO;
 
-class AuthController {
+class AuthController
+{
+    public function paciente()
+    {
 
-    public function paciente(){
+        $nome  = !empty($_POST['nome']) ? $_POST['nome'] : null;
+        $email = !empty($_POST['email']) ? $_POST['email'] : null;
+        $senha = !empty($_POST['senha']) ? $_POST['senha'] : null;
+        $emailValido = filter_var($email, FILTER_VALIDATE_EMAIL);
+        $dataNascimento = !empty($_POST['data_nasc']) ? $_POST['data_nasc'] : null ;
+        $telefone = !empty($_POST['telefone']) ? $_POST['telefone'] : null;
+        $telefoneLimpo = str_replace(array('.', '-', '(', ')'), '', $telefone);
+        $telefoneValido = filter_var($telefoneLimpo, FILTER_VALIDATE_INT);
 
-                $nome  = !empty($_POST['nome']) ? $_POST['nome'] : null;
-                $email = !empty($_POST['email']) ? $_POST['email'] : null;
-                $senha = !empty($_POST['senha']) ? $_POST['senha'] : null;
-                $emailValido = filter_var($email, FILTER_VALIDATE_EMAIL);
-                $dataNascimento = !empty($_POST['data_nasc']) ? $_POST['data_nasc']: null ;
-                $telefone = !empty($_POST['telefone']) ? $_POST['telefone'] : null;
-                $telefoneLimpo = str_replace(array('.', '-', '(', ')'), '', $telefone);
-                $telefoneValido = filter_var($telefoneLimpo, FILTER_VALIDATE_INT);
-                        
-                        if(empty($senha)) {
-                          $senhaNova = null;
-                        }else{
-                            $senhaNova = password_hash($senha, PASSWORD_DEFAULT);
-                        }
+        if (empty($senha)) {
+            $senhaNova = null;
+        } else {
+            $senhaNova = password_hash($senha, PASSWORD_DEFAULT);
+        }
 
-                try {
+        try {
 
-                    $pdo = Conexao::getConnection();
+            $pdo = Conexao::getConnection();
 
-                    $pdo->beginTransaction();
+            $pdo->beginTransaction();
 
-                    $stmtUser = $pdo->prepare("
+            $stmtUser = $pdo->prepare("
                         INSERT INTO usuario (nome_user, email_user, senha_user, id_papel)
                         VALUES (:nome, :email, :senha, 1)
                     ");
 
-                    $stmtUser->bindValue(':nome', $nome, PDO::PARAM_STR);
-                    $stmtUser->bindValue(':email', $emailValido, PDO::PARAM_STR);
-                    $stmtUser->bindValue(':senha', $senhaNova, PDO::PARAM_STR);
+            $stmtUser->bindValue(':nome', $nome, PDO::PARAM_STR);
+            $stmtUser->bindValue(':email', $emailValido, PDO::PARAM_STR);
+            $stmtUser->bindValue(':senha', $senhaNova, PDO::PARAM_STR);
 
-                    $stmtUser->execute();
+            $stmtUser->execute();
 
-                    $idUsuario = $pdo->lastInsertId();
+            $idUsuario = $pdo->lastInsertId();
 
-                    $stmtPaciente = $pdo->prepare("
+            $stmtPaciente = $pdo->prepare("
                         INSERT INTO paciente (id_usuario, data_nascimento, telefone)
                         VALUES (?, ?, ?)
                     ");
 
-                    $stmtPaciente->execute([$idUsuario, $dataNascimento, $telefoneValido]);
+            $stmtPaciente->execute([$idUsuario, $dataNascimento, $telefoneValido]);
 
-                    $idPaciente = $pdo->lastInsertId();
+            $idPaciente = $pdo->lastInsertId();
 
-                    $_SESSION['paciente_id'] = $idPaciente;
-                    
-                    $pdo->commit();
+            $_SESSION['paciente_id'] = $idPaciente;
 
-                    header('Location: /Psychology-clinic-project/public/usuario/login');
-                    exit;
+            $pdo->commit();
 
-                } catch (\Exception $e) {
+            header('Location: /Psychology-clinic-project/public/usuario/login');
+            exit;
 
-                if ($pdo->inTransaction()) {
+        } catch (\Exception $e) {
 
-                        $pdo->rollBack();
-                    }
+            if ($pdo->inTransaction()) {
 
-                    error_log("Erro ao cadastrar paciente/usuário: ".$e->getMessage());
+                $pdo->rollBack();
+            }
 
-                    echo "Erro ao cadastrar paciente/usuário: ".$e->getMessage();
+            error_log("Erro ao cadastrar paciente/usuário: ".$e->getMessage());
 
-                    exit;
+            echo "Erro ao cadastrar paciente/usuário: ".$e->getMessage();
 
-                }
-            
+            exit;
+
+        }
+
 
 
     }
 
-    public function professor(){
+    public function professor()
+    {
 
-                $nome  = !empty($_POST['nome']) ? $_POST['nome'] : null;
-                $email = !empty($_POST['email']) ? $_POST['email'] : null;
-                $senha = !empty($_POST['senha']) ? $_POST['senha'] : null;
-                $emailValido = filter_var($email, FILTER_VALIDATE_EMAIL);
-                $rp = !empty($_POST['rp']) ? $_POST['rp']: null;
-                
-                
+        $nome  = !empty($_POST['nome']) ? $_POST['nome'] : null;
+        $email = !empty($_POST['email']) ? $_POST['email'] : null;
+        $senha = !empty($_POST['senha']) ? $_POST['senha'] : null;
+        $emailValido = filter_var($email, FILTER_VALIDATE_EMAIL);
+        $rp = !empty($_POST['rp']) ? $_POST['rp'] : null;
 
-                        if(empty($senha)) {
-                          $senhaNova = null;
-                        }else{
-                            $senhaNova = password_hash($senha, PASSWORD_DEFAULT);
-                        }
+
+
+        if (empty($senha)) {
+            $senhaNova = null;
+        } else {
+            $senhaNova = password_hash($senha, PASSWORD_DEFAULT);
+        }
 
         try {
 
@@ -120,10 +122,10 @@ class AuthController {
 
             $stmtProfessor->execute([$idUsuario, $rp]);
 
-            $idprofessor = $pdo->lastInsertId(); 
+            $idprofessor = $pdo->lastInsertId();
 
             $_SESSION['professor_id'] = $idprofessor;
-            
+
             $pdo->commit();
 
             header('Location: /Psychology-clinic-project/public/usuario/login');
@@ -131,7 +133,7 @@ class AuthController {
 
         } catch (\Exception $e) {
 
-           if ($pdo->inTransaction()) {
+            if ($pdo->inTransaction()) {
 
                 $pdo->rollBack();
             }
@@ -146,26 +148,27 @@ class AuthController {
 
     }
 
-    public function aluno(){
+    public function aluno()
+    {
 
 
-                $nome  = !empty($_POST['nome']) ? $_POST['nome'] : null;
-                $email = !empty($_POST['email']) ? $_POST['email'] : null;
-                $senha = !empty($_POST['senha']) ? $_POST['senha'] : null;
-                $emailValido = filter_var($email, FILTER_VALIDATE_EMAIL);
-                $matricula = !empty($_POST['matricula']) ? $_POST['matricula'] : null;
-                $semestre = $_POST['semestre'] ?? null;
+        $nome  = !empty($_POST['nome']) ? $_POST['nome'] : null;
+        $email = !empty($_POST['email']) ? $_POST['email'] : null;
+        $senha = !empty($_POST['senha']) ? $_POST['senha'] : null;
+        $emailValido = filter_var($email, FILTER_VALIDATE_EMAIL);
+        $matricula = !empty($_POST['matricula']) ? $_POST['matricula'] : null;
+        $semestre = $_POST['semestre'] ?? null;
 
-                        if(empty($senha)) {
-                          $senhaNova = null;
-                        }else{
-                            $senhaNova = password_hash($senha, PASSWORD_DEFAULT);
-                        }
+        if (empty($senha)) {
+            $senhaNova = null;
+        } else {
+            $senhaNova = password_hash($senha, PASSWORD_DEFAULT);
+        }
 
         try {
 
             $pdo = Conexao::getConnection();
-            
+
             $pdo->beginTransaction();
 
             $stmtUser = $pdo->prepare("
@@ -188,10 +191,10 @@ class AuthController {
 
             $stmtAluno->execute([$idUsuario, $matricula, $semestre]);
 
-            $idAluno = $pdo->lastInsertId(); 
+            $idAluno = $pdo->lastInsertId();
 
             $_SESSION['aluno_id'] = $idAluno;
-            
+
             $pdo->commit();
 
             header('Location: /Psychology-clinic-project/public/usuario/login');
@@ -201,14 +204,14 @@ class AuthController {
 
             if ($pdo->inTransaction()) {
 
-                    $pdo->rollBack();
-                }
+                $pdo->rollBack();
+            }
 
-                error_log("Erro ao cadastrar aluno/usuário".$e->getMessage());
+            error_log("Erro ao cadastrar aluno/usuário".$e->getMessage());
 
-                echo "Erro ao cadastrar aluno/usuário".$e->getMessage();
+            echo "Erro ao cadastrar aluno/usuário".$e->getMessage();
 
-                exit;
+            exit;
 
         }
 

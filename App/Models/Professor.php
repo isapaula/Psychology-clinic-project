@@ -1,7 +1,7 @@
-<?php 
+<?php
 
-namespace Models; 
+namespace Models;
 
-class Professor  {
-
-} 
+class Professor
+{
+}

@@ -17,7 +17,7 @@
             <th>Termino da sessão</th>
             <th>Status da Sessão</th>
         </tr>
-        <?php foreach($result as $key): ?>
+        <?php foreach ($result as $key): ?>
         <tr>
               <td><?= $key['nome_paciente']  ?></td>
               <td><?= $key['solicitacoes_status']  ?></td>

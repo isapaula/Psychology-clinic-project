@@ -1,20 +1,20 @@
-<?php 
+<?php
 
 namespace Models;
+
 use Models\Paciente;
 use Enums\StatusSolicitacao;
 
-class SolicitacaoAtendimento {
-
-
-    private int $idSolicitacao; 
+class SolicitacaoAtendimento
+{
+    private int $idSolicitacao;
     private Paciente $paciente;
     private StatusSolicitacao  $status;
     private $dataCriacao;
-    private $especialidade; 
+    private $especialidade;
     private $observacaoInicial;
 
-    
+
     public function getStatus()
     {
         return $this->status;

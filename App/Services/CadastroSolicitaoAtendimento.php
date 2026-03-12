@@ -1,11 +1,12 @@
 <?php
 
 namespace Services;
+
 use Models\SolicitacaoAtendimento;
 
-class CadastrarSolicitacaoAtendimentoService {
-
+class CadastrarSolicitacaoAtendimentoService
+{
     private SolicitacaoAtendimento $SAt;
-    
-    
+
+
 }

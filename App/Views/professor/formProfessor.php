@@ -8,15 +8,15 @@
 <body>
     <h2>Cadastro do Professor</h2>
     <form action="/Psychology-clinic-project/public/auth/professor" method="post">
-         <input type="text" name="nome" id="nome" placeholder="Digite o nome">
+         <input type="text" name="nome" id="nome" placeholder="Digite o nome" required>
         <br><br>
-        <input type="email" name="email" id="email" placeholder="Digite o e-mail">
+        <input type="email" name="email" id="email" placeholder="Digite o e-mail" required>
         <br><br>
         <label for="">Digite uma senha:</label><br>
-        <input type="password" name="senha" id="senha">
+        <input type="password" name="senha" id="senha" required>
         <br><br>
         <label for="">Digite seu registro profissional:</label><br>
-        <input type="number" name="rp" id="rp" maxlength="5">
+        <input type="number" name="rp" id="rp" maxlength="5" required>
         <br><br>
         <button type="submit">Enviar</button>
 

@@ -1,11 +1,11 @@
-<?php 
+<?php
 
-namespace Models; 
+namespace Models;
 
-class Aluno  {
-
+class Aluno
+{
     private Usuario $idUser;
-    private $especialidades; 
+    private $especialidades;
     private $limiteAtendimentos;
     private $ativo;
 
@@ -59,4 +59,3 @@ class Aluno  {
         return $this;
     }
 }
-

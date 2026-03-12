@@ -1,24 +1,26 @@
-<?php 
+<?php
 
 namespace Controller;
 
 use Database\Conexao;
 
-class ProfessorController extends BaseController {
-
+class ProfessorController extends BaseController
+{
     public function __construct()
     {
         $this->verificarAutenticacao(3);
     }
 
-    public function index(){
+    public function index()
+    {
 
         $this->listarSolicitacoes();
 
     }
 
-    public function aprovada() {
-    
+    public function aprovada()
+    {
+
 
         $id = $_POST['id_solicitacao'] ?? null;
 
@@ -76,8 +78,9 @@ class ProfessorController extends BaseController {
         }
     }
 
-    public function recusada() {
-    
+    public function recusada()
+    {
+
 
         $id = $_POST['id_solicitacao'] ?? null;
 
@@ -92,7 +95,7 @@ class ProfessorController extends BaseController {
 
             $pdo->beginTransaction();
 
-            
+
             $stmt = $pdo->prepare("
                 SELECT solicitacoes_status 
                 FROM solicitacoes_atendimento 
@@ -110,7 +113,7 @@ class ProfessorController extends BaseController {
                 throw new \Exception("Solicitação não pode ser recusada.");
             }
 
-            
+
             $update = $pdo->prepare("
                 UPDATE solicitacoes_atendimento
                 SET solicitacoes_status = 'RECUSADA'
@@ -137,11 +140,12 @@ class ProfessorController extends BaseController {
         }
     }
 
-    public function listarSolicitacoes(){
+    public function listarSolicitacoes()
+    {
 
         try {
 
-            $pdo = Conexao::getConnection(); 
+            $pdo = Conexao::getConnection();
 
             $sql = "SELECT solicitacoes_atendimento.id_solicitacao, usuario.nome_user, solicitacoes_atendimento.especialidade, solicitacoes_atendimento.horario_desejado, solicitacoes_atendimento.observacao_inicial, solicitacoes_atendimento.solicitacoes_status FROM  solicitacoes_atendimento
                     INNER JOIN paciente ON solicitacoes_atendimento.id_paciente = paciente.id_paciente
@@ -160,12 +164,12 @@ class ProfessorController extends BaseController {
                     case 'AGUARDANDO_TRIAGEM':
                         $SolicitacoesPendentes[] = $dado;
                         break;
-                    
+
                     default:
                         $solicitacoesAnalisadas[] = $dado;
                         break;
                 }
-                
+
             }
             require dirname(__DIR__, 2). '/App/Views/professor/AreaProfessor.php';
 
@@ -173,7 +177,7 @@ class ProfessorController extends BaseController {
 
             error_log("Erro ao carregar as solicitações na tela do professor! ". $e->getMessage());
             echo "Erro ao carregar as solicitações na tela do professor! ". $e->getMessage();
-            
+
         }
 
     }

@@ -1,26 +1,30 @@
 <?php
 
 namespace Controller;
+
 use Database\Conexao;
 
-class SolicitacaoController {
-
-    public function create(){
+class SolicitacaoController
+{
+    public function create()
+    {
 
         require dirname(__DIR__, 2) . '/App/Views/paciente/SolicitarAtendimentoForm.php';
 
     }
 
-    public function areaPaciente(){
+    public function areaPaciente()
+    {
 
         require dirname(__DIR__, 2). '/App/Views/paciente/AreaPaciente.php';
     }
 
-    public function store(){
+    public function store()
+    {
 
         $especialidade = $_POST['especialidade'] ?? null;
         $horario_desejado = $_POST['selectHora'] ?? null;
-        $observacao = $_POST['observacao'] ?? null; 
+        $observacao = $_POST['observacao'] ?? null;
 
         if (isset($_SESSION['user_id'])) {
 
@@ -43,27 +47,28 @@ class SolicitacaoController {
 
                 $paciente = new PacienteController();
                 $paciente->index();
-                 
+
 
             } catch (\Exception $e) {
 
-               if ($pdo->inTransaction()) {
+                if ($pdo->inTransaction()) {
                     $pdo->rollBack();
                 }
 
                 error_log("Erro ao cadastrar solicitação de atendimento");
 
                 echo "Erro ao cadastrar solicitação de atendimento:{$e->getMessage()}";
-                
+
             }
 
-        }else{
+        } else {
             echo "Não foi possível criar a solicitação de atendimento!";
         }
-    
+
     }
 
-    public function statusSolicitação($idpaciente){
+    public function statusSolicitação($idpaciente)
+    {
 
         $pdo = Conexao::getConnection();
 
@@ -77,17 +82,17 @@ class SolicitacaoController {
 
             $consulta->execute([ 'id_paciente' => $idpaciente]);
 
-            // dessa forma o sistema pega apenas uma solicitação atendimento do paciente, para pegar todas é necessário o fetchAll. 
+            // dessa forma o sistema pega apenas uma solicitação atendimento do paciente, para pegar todas é necessário o fetchAll.
             $result  = $consulta->fetch(\PDO::FETCH_ASSOC);
 
             return $result;
 
-            
+
         } catch (\Exception $e) {
 
             error_log("Erro ao consultar o status da solicitação: ".$e);
-            echo "Erro ao consultar o status da solicitação: ".$e; 
-            
+            echo "Erro ao consultar o status da solicitação: ".$e;
+
         }
 
     }

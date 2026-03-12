@@ -2,9 +2,8 @@
 
 namespace Router;
 
-class Router {
-
-
+class Router
+{
     public function dispatch()
     {
         $uri = $_SERVER['REQUEST_URI'];

@@ -1,28 +1,30 @@
-<?php 
+<?php
 
 namespace Controller;
 
 use Database\Conexao;
 
-class UsuarioController {
+class UsuarioController
+{
+    public function login()
+    {
 
-    public function login(){
-
-        require dirname(__DIR__, 2 ). '/App/Views/Login.php';
+        require dirname(__DIR__, 2). '/App/Views/Login.php';
     }
 
-    public function store(){
+    public function store()
+    {
 
         try {
 
-            $pdo = Conexao::getConnection(); 
+            $pdo = Conexao::getConnection();
 
             $login = $_POST['user'] ?? null;
-            $pass = $_POST['pass'] ?? null; 
+            $pass = $_POST['pass'] ?? null;
 
             $sql = "SELECT id_user, nome_user, email_user, senha_user, id_papel FROM usuario WHERE email_user = ? ;";
 
-            $stmt = $pdo->prepare($sql); 
+            $stmt = $pdo->prepare($sql);
 
             $stmt->execute([$login]);
 
@@ -47,7 +49,7 @@ class UsuarioController {
                     case 3:
                         header('Location: /Psychology-clinic-project/public/professor/index');
                         break;
-                    
+
                     default:
                         header('Location: /Psychology-clinic-project/public/usuario/login');
                         break;
@@ -55,16 +57,16 @@ class UsuarioController {
 
                 exit;
 
-            }else{
+            } else {
                 echo "E-mail ou senha inválidos!";
             }
 
         } catch (\Exception $e) {
             error_log("Erro ao logar no sistema: ". $e->getMessage());
             echo "Erro ao logar no sistema: ".$e->getMessage();
-            
+
         }
-        
+
     }
 
-}                                                                                
+}

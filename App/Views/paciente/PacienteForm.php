@@ -10,15 +10,15 @@
     
     <h2>Cadastro do Paciente</h2>
     <form action="/Psychology-clinic-project/public/auth/paciente" method="post">
-        <input type="text" name="nome" id="nome" placeholder="Digite o nome" >
+        <input type="text" name="nome" id="nome" placeholder="Digite o nome" required>
         <br><br>
-        <input type="email" name="email" id="email" placeholder="Digite o e-mail" >
+        <input type="email" name="email" id="email" placeholder="Digite o e-mail" required>
         <br><br>
-        <input type="password" name="senha" id="senha" >
+        <input type="password" name="senha" id="senha" required>
         <br><br>
-        <input type="date" name="data_nasc" id="data_nasc" placeholder="Data Nascimento" >
+        <input type="date" name="data_nasc" id="data_nasc" placeholder="Data Nascimento" required>
         <br><br>
-        <input type="text" name="telefone" id="telefone" maxlength="11" placeholder="(00) 00000-0000" >
+        <input type="text" name="telefone" id="telefone" maxlength="11" placeholder="(00) 00000-0000" required>
         <br><br>
         <button type="submit">Enviar</button>
         

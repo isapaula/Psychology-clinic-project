@@ -4,34 +4,35 @@ namespace Controller;
 
 use Database\Conexao;
 
-class SessaoController {
-
-    public function index(){
+class SessaoController
+{
+    public function index()
+    {
 
         if (isset($_SESSION['user_id'])) {
 
-            $iduser = $_SESSION['user_id']; 
-            
+            $iduser = $_SESSION['user_id'];
+
             try {
 
-            $pdo = Conexao::getConnection(); 
+                $pdo = Conexao::getConnection();
 
-            $sql = "SELECT sessao.id_sessao, sessao.nome_paciente, solicitacoes_atendimento.solicitacoes_status, sessao.data_sessao, sessao.hora_inicio , sessao.hora_fim, status_sessao FROM solicitacoes_atendimento
+                $sql = "SELECT sessao.id_sessao, sessao.nome_paciente, solicitacoes_atendimento.solicitacoes_status, sessao.data_sessao, sessao.hora_inicio , sessao.hora_fim, status_sessao FROM solicitacoes_atendimento
             INNER JOIN aluno ON solicitacoes_atendimento.id_aluno = aluno.id_aluno
             INNER JOIN sessao ON sessao.id_solicitacao = solicitacoes_atendimento.id_solicitacao
             WHERE aluno.id_usuario = ? ;";
 
-            $select =  $pdo->prepare($sql);
+                $select =  $pdo->prepare($sql);
 
-            $select->execute([$iduser]); 
+                $select->execute([$iduser]);
 
-            $result = $select->fetchAll(\PDO::FETCH_ASSOC);
+                $result = $select->fetchAll(\PDO::FETCH_ASSOC);
 
-            require dirname(__DIR__, 2 ). '/App/Views/Aluno/Sessoes.php';
+                require dirname(__DIR__, 2). '/App/Views/Aluno/Sessoes.php';
 
-                
+
             } catch (\PDOException $e) {
-                
+
                 error_log("Não foi possível mostrar suas sessões!". $e->getMessage());
                 echo "Não foi possível mostrar suas sessões!". $e->getMessage();
 
@@ -40,13 +41,15 @@ class SessaoController {
 
     }
 
-    public function create(){
+    public function create()
+    {
 
         require dirname(__DIR__, 2). '/App/Views/Aluno/CriarSessao.php';
 
     }
 
-    public function store(){
+    public function store()
+    {
 
         $pdo = Conexao::getConnection();
 
@@ -60,11 +63,11 @@ class SessaoController {
 
                 $idSolic = $_SESSION['id_solicitacao'];
                 $iduser = $_SESSION['user_id'];
-                $nome_paciente = $_SESSION['nome_paciente']; 
+                $nome_paciente = $_SESSION['nome_paciente'];
                 $datasessao = $_POST['data_sessao'];
                 $horainicio = $_POST['hora_inicio'];
-                $horafinal = $_POST['hora_final']; 
-                
+                $horafinal = $_POST['hora_final'];
+
 
                 $insert = $pdo->prepare($sql);
 
@@ -73,7 +76,7 @@ class SessaoController {
                 $pdo->commit();
 
                 $this->index();
-            
+
 
             } catch (\PDOException $e) {
 
@@ -84,18 +87,19 @@ class SessaoController {
                 error_log("Não foi possível inserir a sessão! ". $e->getMessage());
 
                 echo "Não foi possível inserir a sessão!". $e->getMessage();
-                
+
             }
 
         }
 
     }
 
-    public function updateStatus() {
+    public function updateStatus()
+    {
 
         if (!isset($_POST['id_sessao'], $_POST['status'])) {
             echo "Dados inválidos.";
-            
+
         }
 
         $status = $_POST['status'];

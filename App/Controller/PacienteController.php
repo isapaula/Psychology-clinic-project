@@ -1,27 +1,30 @@
-<?php 
+<?php
 
 namespace Controller;
 
 use Database\Conexao;
 
-class PacienteController extends BaseController {
-
+class PacienteController extends BaseController
+{
     public function __construct()
     {
         $this->verificarAutenticacao(1);
     }
-    
-    public function index(){
 
-        $this->MinhaSolicitacao($_SESSION['user_id']); 
+    public function index()
+    {
+
+        $this->MinhaSolicitacao($_SESSION['user_id']);
     }
 
-    public function SolicitarAtendimento(){
+    public function SolicitarAtendimento()
+    {
 
         require dirname(__DIR__, 2). '/App/Views/paciente/SolicitarAtendimentoForm.php';
     }
 
-    public function MinhaSolicitacao($id_user){
+    public function MinhaSolicitacao($id_user)
+    {
 
         try {
 
@@ -31,25 +34,25 @@ class PacienteController extends BaseController {
                     INNER JOIN paciente ON  solicitacoes_atendimento.id_paciente = paciente.id_paciente
                     INNER JOIN usuario  ON paciente.id_usuario = usuario.id_user
                     WHERE usuario.id_user = ?;";
-            
-            $query = $pdo->prepare($sql); 
+
+            $query = $pdo->prepare($sql);
 
             $query->execute([$id_user]);
 
-            $dados = $query->fetch(\PDO::FETCH_ASSOC); 
+            $dados = $query->fetch(\PDO::FETCH_ASSOC);
 
             if (is_array($dados)) {
 
                 $statusSolicitacao = $dados['solicitacoes_status'];
-                
+
                 $_SESSION['status_solicitacao'] = $statusSolicitacao;
 
                 require dirname(__DIR__, 2) .'/App/Views/paciente/AreaPaciente.php';
 
 
-            }else{
+            } else {
 
-             $this->SolicitarAtendimento();
+                $this->SolicitarAtendimento();
 
             }
 
@@ -58,5 +61,5 @@ class PacienteController extends BaseController {
         }
 
     }
-    
+
 }

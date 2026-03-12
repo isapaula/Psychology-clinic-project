@@ -9,12 +9,12 @@ test('test', async ({ page }) => {
   await page.getByRole('link', { name: 'Paciente' }).click();
   await page.getByRole('textbox', { name: 'Digite o nome' }).click();
   let email = faker.internet.email();
-   await page.getByRole('textbox', { name: 'Digite o nome' }).fill(faker.person.fullName());
+  await page.getByRole('textbox', { name: 'Digite o nome' }).fill(faker.person.fullName());
   await page.getByRole('textbox', { name: 'Digite o e-mail' }).click();
-  // await page.getByRole('textbox', { name: 'Digite o e-mail' }).fill(email);
+  await page.getByRole('textbox', { name: 'Digite o e-mail' }).fill(email);
   let senha = faker.internet.password({ length: 6, memorable: true });
   await page.locator('#senha').click();
-  // await page.locator('#senha').fill(senha);
+  await page.locator('#senha').fill(senha);
   await page.getByPlaceholder('Data Nascimento').fill('2021-08-06');
   await page.getByRole('textbox', { name: '(00) 00000-' }).click();
   await page.getByRole('textbox', { name: '(00) 00000-' }).fill(faker.phone.number());
@@ -31,4 +31,4 @@ test('test', async ({ page }) => {
 
 });
 
-// npx playwright test CadastroPaciente.spec.js
+// npx playwright test App/Tests/e2e/CadastroPerfis/CadastroPaciente.spec.js
