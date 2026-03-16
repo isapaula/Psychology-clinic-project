@@ -70,13 +70,14 @@ Durante o processo de desenvolvimento, foi necessário corrigir vários arquivos
 - Ampliação da cobertura de testes automatizados
 - Melhor separação entre regras de negócio e camada de apresentação
 
+# 🔄 Roadmap (Próximos Passos)
 
+Versão 2:
+- Implementação de camada Service
+- Padrão Repository
+- Testes automatizados
+- Refatoração para melhoria de coesão.
 
-
-
-
-
-  
 
 
 
