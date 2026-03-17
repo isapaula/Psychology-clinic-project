@@ -1,3 +1,11 @@
+<p align="center">Preview</p>
+
+
+https://github.com/user-attachments/assets/d12a9712-5978-43df-99ac-364861c0f87a
+
+
+
+<br>
 <p align="center"><img width="64" height="64" alt="icons864" src="https://github.com/user-attachments/assets/b57d0693-5a56-4531-a807-90565f8a2bb0" /></p>
 <h2 align="center">Sistema para universidades com curso de psicologia</h2>
 <p align="center">Versão atual: 1.0</p>
