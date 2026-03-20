@@ -14,7 +14,7 @@ class AlunoService
             $pdo = Conexao::getConnection();
 
             $sql = "INSERT INTO aluno (id_usuario, matricula , semestre )
-                VALUES(:id_usuario, :matricula,  :semestre";
+                VALUES(:id_usuario, :matricula, :semestre";
 
             $stmtAluno = $pdo->prepare($sql);
 
