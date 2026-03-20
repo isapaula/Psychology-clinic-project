@@ -1,8 +1,8 @@
 <?php
 
-namespace Controller;
+namespace App\Controller;
 
-use Database\Conexao;
+use App\Database\Conexao;
 
 class PacienteController extends BaseController
 {

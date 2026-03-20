@@ -1,12 +1,13 @@
 <?php
 
-namespace Controller;
+namespace App\Controller;
 
-use Database\Conexao;
-use Service\AlunoService;
-use Service\PacienteService;
-use Service\ProfessorService;
-use Service\UsuarioService;
+use App\Service\UsuarioService;
+use App\Database\Conexao;
+use App\Service\AlunoService;
+use App\Service\PacienteService;
+use App\Service\ProfessorService;
+
 
 class AuthController
 {
@@ -18,7 +19,7 @@ class AuthController
             $pdo = Conexao::getConnection();
             $pdo->beginTransaction();
 
-            $usuarioService = new UsuarioService();
+            $usuarioService = new UsuarioService($pdo);
             $pacienteService = new PacienteService();
 
             $dadosUsuario = $this->obterDadosUsuario();
@@ -61,7 +62,7 @@ class AuthController
             $pdo = Conexao::getConnection();
             $pdo->beginTransaction();
 
-            $usuarioService   = new UsuarioService();
+            $usuarioService = new UsuarioService($pdo);
             $professorService = new ProfessorService();
 
             $dadosUsuario = $this->obterDadosUsuario();
@@ -101,7 +102,7 @@ class AuthController
             $pdo = Conexao::getConnection();
             $pdo->beginTransaction();
 
-            $usuarioService = new UsuarioService();
+            $usuarioService = new UsuarioService($pdo);
             $alunoService   = new AlunoService();
 
             $dadosUsuario = $this->obterDadosUsuario();

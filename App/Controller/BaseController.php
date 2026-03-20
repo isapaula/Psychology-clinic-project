@@ -1,8 +1,8 @@
 <?php
 
-namespace Controller;
+namespace App\Controller;
 
-use Controller\HomeController;
+use App\Controller\HomeController;
 
 class BaseController
 {

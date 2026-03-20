@@ -1,9 +1,9 @@
 <?php
 
-namespace Controller;
+namespace App\Controller;
 
-use Database\Conexao;
-use Controller\SessaoController;
+use App\Database\Conexao;
+use App\Controller\SessaoController;
 
 class AlunoController extends BaseController
 {

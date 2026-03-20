@@ -1,8 +1,8 @@
 <?php
 
-namespace Models;
+namespace App\Models;
 
-use Enums\TipoUsuario;
+use App\Enums\TipoUsuario;
 
 class Usuario
 {

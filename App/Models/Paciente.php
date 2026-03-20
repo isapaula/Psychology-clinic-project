@@ -1,8 +1,8 @@
 <?php
 
-namespace Models;
+namespace App\Models;
 
-use Enums\Especialidade;
+use App\Enums\Especialidade;
 
 class Paciente
 {

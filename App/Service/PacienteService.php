@@ -1,8 +1,8 @@
 <?php
 
-namespace Service;
+namespace App\Service;
 
-use Database\Conexao;
+use App\Database\Conexao;
 
 class PacienteService
 {

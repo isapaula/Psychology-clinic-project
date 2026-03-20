@@ -1,8 +1,8 @@
 <?php
 
-namespace Service;
+namespace App\Service;
 
-use Models\SolicitacaoAtendimento;
+use App\Models\SolicitacaoAtendimento;
 
 class CadastrarSolicitacaoAtendimentoService
 {
