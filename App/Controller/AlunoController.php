@@ -49,7 +49,7 @@ class AlunoController extends BaseController
                 foreach ($Minhassolicitacoes as $Caso) {
 
                     switch ($Caso['solicitacoes_status']) {
-                        case 'EM_TRIAGEM':
+                        case 'EM_ATENDIMENTO':
                             $casosAssumidos[] = $Caso;
                             break;
 
@@ -131,7 +131,7 @@ class AlunoController extends BaseController
         $pdo = Conexao::getConnection();
 
         $sql = "UPDATE solicitacoes_atendimento 
-        SET solicitacoes_status = 'EM_TRIAGEM',
+        SET solicitacoes_status = 'ASSUMIDA',
         id_aluno = (SELECT aluno.id_aluno FROM aluno WHERE id_usuario = ?) 
         WHERE id_solicitacao = ?;";
 

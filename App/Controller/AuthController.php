@@ -3,57 +3,39 @@
 namespace Controller;
 
 use Database\Conexao;
-use PDO;
+use Service\AlunoService;
+use Service\PacienteService;
+use Service\ProfessorService;
+use Service\UsuarioService;
 
 class AuthController
 {
     public function paciente()
     {
 
-        $nome  = !empty($_POST['nome']) ? $_POST['nome'] : null;
-        $email = !empty($_POST['email']) ? $_POST['email'] : null;
-        $senha = !empty($_POST['senha']) ? $_POST['senha'] : null;
-        $emailValido = filter_var($email, FILTER_VALIDATE_EMAIL);
-        $dataNascimento = !empty($_POST['data_nasc']) ? $_POST['data_nasc'] : null ;
-        $telefone = !empty($_POST['telefone']) ? $_POST['telefone'] : null;
-        $telefoneLimpo = str_replace(array('.', '-', '(', ')'), '', $telefone);
-        $telefoneValido = filter_var($telefoneLimpo, FILTER_VALIDATE_INT);
-
-        if (empty($senha)) {
-            $senhaNova = null;
-        } else {
-            $senhaNova = password_hash($senha, PASSWORD_DEFAULT);
-        }
-
         try {
 
             $pdo = Conexao::getConnection();
-
             $pdo->beginTransaction();
 
-            $stmtUser = $pdo->prepare("
-                        INSERT INTO usuario (nome_user, email_user, senha_user, id_papel)
-                        VALUES (:nome, :email, :senha, 1)
-                    ");
+            $usuarioService = new UsuarioService();
+            $pacienteService = new PacienteService();
 
-            $stmtUser->bindValue(':nome', $nome, PDO::PARAM_STR);
-            $stmtUser->bindValue(':email', $emailValido, PDO::PARAM_STR);
-            $stmtUser->bindValue(':senha', $senhaNova, PDO::PARAM_STR);
+            $dadosUsuario = $this->obterDadosUsuario();
+            $this->validarDadosUsuario($dadosUsuario);
 
-            $stmtUser->execute();
+            $dadosPaciente = $this->obterDadosPaciente();
 
-            $idUsuario = $pdo->lastInsertId();
+            $idUsuario = $usuarioService->criarUsuario($dadosUsuario, 1);
 
-            $stmtPaciente = $pdo->prepare("
-                        INSERT INTO paciente (id_usuario, data_nascimento, telefone)
-                        VALUES (?, ?, ?)
-                    ");
+            $dados = [];
 
-            $stmtPaciente->execute([$idUsuario, $dataNascimento, $telefoneValido]);
+            $dados['id_usuario'] = $idUsuario;
+            $dados['nome_paciente'] = $dadosUsuario['nome'];
+            $dados['data_nascimento'] =  $dadosPaciente['data_nascimento'];
+            $dados['telefone'] = $dadosPaciente['telefone'];
 
-            $idPaciente = $pdo->lastInsertId();
-
-            $_SESSION['paciente_id'] = $idPaciente;
+            $pacienteService->criar($dados);
 
             $pdo->commit();
 
@@ -63,68 +45,38 @@ class AuthController
         } catch (\Exception $e) {
 
             if ($pdo->inTransaction()) {
-
                 $pdo->rollBack();
             }
 
-            error_log("Erro ao cadastrar paciente/usuário: ".$e->getMessage());
-
-            echo "Erro ao cadastrar paciente/usuário: ".$e->getMessage();
-
-            exit;
+            echo $e->getMessage();
 
         }
-
-
-
     }
 
     public function professor()
     {
 
-        $nome  = !empty($_POST['nome']) ? $_POST['nome'] : null;
-        $email = !empty($_POST['email']) ? $_POST['email'] : null;
-        $senha = !empty($_POST['senha']) ? $_POST['senha'] : null;
-        $emailValido = filter_var($email, FILTER_VALIDATE_EMAIL);
-        $rp = !empty($_POST['rp']) ? $_POST['rp'] : null;
-
-
-
-        if (empty($senha)) {
-            $senhaNova = null;
-        } else {
-            $senhaNova = password_hash($senha, PASSWORD_DEFAULT);
-        }
-
         try {
 
             $pdo = Conexao::getConnection();
-
             $pdo->beginTransaction();
 
-            $stmtUser = $pdo->prepare("
-                INSERT INTO usuario (nome_user, email_user, senha_user, id_papel)
-                        VALUES (:nome, :email, :senha, 3)
-            ");
+            $usuarioService   = new UsuarioService();
+            $professorService = new ProfessorService();
 
-            $stmtUser->bindValue(':nome', $nome, PDO::PARAM_STR);
-            $stmtUser->bindValue(':email', $emailValido, PDO::PARAM_STR);
-            $stmtUser->bindValue(':senha', $senhaNova, PDO::PARAM_STR);
+            $dadosUsuario = $this->obterDadosUsuario();
+            $this->validarDadosUsuario($dadosUsuario);
 
-            $stmtUser->execute();
+            $dadosProfessor = $this->obterDadosProfessor();
 
-            $idUsuario = $pdo->lastInsertId();
+            $idUsuario = $usuarioService->criarUsuario($dadosUsuario, 3);
 
-            $stmtProfessor = $pdo->prepare("
-                INSERT INTO professor (id_usuario, registro_profissional)
-                VALUES (?, ?);
-            ");
+            $dados = [];
 
-            $stmtProfessor->execute([$idUsuario, $rp]);
+            $dados['id_usuario'] = $idUsuario;
+            $dados['registro_profissional'] = $dadosProfessor['rp'];
 
-            $idprofessor = $pdo->lastInsertId();
-
-            $_SESSION['professor_id'] = $idprofessor;
+            $professorService->criar($dados);
 
             $pdo->commit();
 
@@ -134,66 +86,38 @@ class AuthController
         } catch (\Exception $e) {
 
             if ($pdo->inTransaction()) {
-
                 $pdo->rollBack();
             }
 
-            error_log("Erro ao cadastrar professor/usuário: ".$e->getMessage());
-
-            echo "Erro ao cadastrar professor/usuário: ".$e->getMessage();
-
-            exit;
-
+            echo $e->getMessage();
         }
-
     }
 
     public function aluno()
     {
 
-
-        $nome  = !empty($_POST['nome']) ? $_POST['nome'] : null;
-        $email = !empty($_POST['email']) ? $_POST['email'] : null;
-        $senha = !empty($_POST['senha']) ? $_POST['senha'] : null;
-        $emailValido = filter_var($email, FILTER_VALIDATE_EMAIL);
-        $matricula = !empty($_POST['matricula']) ? $_POST['matricula'] : null;
-        $semestre = $_POST['semestre'] ?? null;
-
-        if (empty($senha)) {
-            $senhaNova = null;
-        } else {
-            $senhaNova = password_hash($senha, PASSWORD_DEFAULT);
-        }
-
         try {
 
             $pdo = Conexao::getConnection();
-
             $pdo->beginTransaction();
 
-            $stmtUser = $pdo->prepare("
-                INSERT INTO usuario (nome_user, email_user, senha_user, id_papel)
-                        VALUES (:nome, :email, :senha, 2)
-            ");
+            $usuarioService = new UsuarioService();
+            $alunoService   = new AlunoService();
 
-            $stmtUser->bindValue(':nome', $nome, PDO::PARAM_STR);
-            $stmtUser->bindValue(':email', $emailValido, PDO::PARAM_STR);
-            $stmtUser->bindValue(':senha', $senhaNova, PDO::PARAM_STR);
+            $dadosUsuario = $this->obterDadosUsuario();
+            $this->validarDadosUsuario($dadosUsuario);
 
-            $stmtUser->execute();
+            $dadosAluno = $this->obterDadosAluno();
 
-            $idUsuario = $pdo->lastInsertId();
+            $idUsuario = $usuarioService->criarUsuario($dadosUsuario, 2);
 
-            $stmtAluno = $pdo->prepare("
-                INSERT INTO aluno (id_usuario, matricula , semestre )
-                VALUES (?, ?, ?);
-            ");
+            $dados = [];
 
-            $stmtAluno->execute([$idUsuario, $matricula, $semestre]);
+            $dados['id_usuario'] = $idUsuario;
+            $dados['semestre'] =  $dadosAluno['semestre'];
+            $dados['matricula'] = $dadosAluno['matricula'];
 
-            $idAluno = $pdo->lastInsertId();
-
-            $_SESSION['aluno_id'] = $idAluno;
+            $alunoService->criar($dados);
 
             $pdo->commit();
 
@@ -207,14 +131,63 @@ class AuthController
                 $pdo->rollBack();
             }
 
-            error_log("Erro ao cadastrar aluno/usuário".$e->getMessage());
-
-            echo "Erro ao cadastrar aluno/usuário".$e->getMessage();
-
-            exit;
-
+            echo $e->getMessage();
         }
 
+    }
+
+    // =========================
+    // MÉTODOS AUXILIARES DE VALIDAÇÃO DOS DADOS
+    // =========================
+
+    private function obterDadosUsuario()
+    {
+        return [
+            'nome'  => $_POST['nome'] ?? null,
+            'email' => $_POST['email'] ?? null,
+            'senha' => $_POST['senha'] ?? null,
+        ];
+    }
+
+    private function validarDadosUsuario($dados)
+    {
+        if (empty($dados['nome']) || empty($dados['email']) || empty($dados['senha'])) {
+            throw new \Exception("Campos obrigatórios não preenchidos");
+        }
+
+        if (!filter_var($dados['email'], FILTER_VALIDATE_EMAIL)) {
+            throw new \Exception("E-mail inválido");
+        }
+    }
+
+    private function obterDadosPaciente()
+    {
+        $telefone = $_POST['telefone'] ?? null;
+
+        return [
+            'data_nascimento' => $_POST['data_nasc'] ?? null,
+            'telefone'        => $this->limparTelefone($telefone)
+        ];
+    }
+
+    private function obterDadosAluno()
+    {
+        return [
+            'matricula' => $_POST['matricula'] ?? null,
+            'semestre'  => $_POST['semestre'] ?? null
+        ];
+    }
+
+    private function obterDadosProfessor()
+    {
+        return [
+            'rp' => $_POST['rp'] ?? null
+        ];
+    }
+
+    private function limparTelefone($telefone)
+    {
+        return str_replace(['(', ')', '-', '.', ' '], '', $telefone);
     }
 
 }

@@ -17,10 +17,11 @@ class SessaoController
 
                 $pdo = Conexao::getConnection();
 
-                $sql = "SELECT sessao.id_sessao, sessao.nome_paciente, solicitacoes_atendimento.solicitacoes_status, sessao.data_sessao, sessao.hora_inicio , sessao.hora_fim, status_sessao FROM solicitacoes_atendimento
-            INNER JOIN aluno ON solicitacoes_atendimento.id_aluno = aluno.id_aluno
-            INNER JOIN sessao ON sessao.id_solicitacao = solicitacoes_atendimento.id_solicitacao
-            WHERE aluno.id_usuario = ? ;";
+                $sql = "SELECT sessao.id_sessao, paciente.nome_paciente,  solicitacoes_atendimento.solicitacoes_status, sessao.data_sessao, sessao.hora_inicio , sessao.hora_fim, status_sessao FROM solicitacoes_atendimento
+                INNER JOIN aluno ON solicitacoes_atendimento.id_aluno = aluno.id_aluno
+                INNER JOIN paciente ON paciente.id_paciente = solicitacoes_atendimento.id_paciente
+                INNER JOIN sessao ON sessao.id_solicitacao = solicitacoes_atendimento.id_solicitacao
+                WHERE aluno.id_usuario = ?;";
 
                 $select =  $pdo->prepare($sql);
 
@@ -38,14 +39,12 @@ class SessaoController
 
             }
         }
-
     }
 
     public function create()
     {
 
         require dirname(__DIR__, 2). '/App/Views/Aluno/CriarSessao.php';
-
     }
 
     public function store()
@@ -53,17 +52,16 @@ class SessaoController
 
         $pdo = Conexao::getConnection();
 
-        if (isset($_SESSION['id_solicitacao'])  && isset($_SESSION['user_id']) && $_SESSION['nome_paciente']) {
+        if (isset($_SESSION['id_solicitacao'])  && isset($_SESSION['user_id'])) {
 
             try {
 
                 $pdo->beginTransaction();
 
-                $sql = "INSERT INTO sessao (id_solicitacao, id_aluno, nome_paciente,  data_sessao, hora_inicio, hora_fim) VALUES (?, (SELECT aluno.id_aluno FROM aluno WHERE aluno.id_usuario = ? ), ?, ?, ?, ?);";
+                $sql = "INSERT INTO sessao (id_solicitacao, id_aluno, data_sessao, hora_inicio, hora_fim) VALUES (?, (SELECT aluno.id_aluno FROM aluno WHERE aluno.id_usuario = ? ), ?, ?, ?);";
 
                 $idSolic = $_SESSION['id_solicitacao'];
                 $iduser = $_SESSION['user_id'];
-                $nome_paciente = $_SESSION['nome_paciente'];
                 $datasessao = $_POST['data_sessao'];
                 $horainicio = $_POST['hora_inicio'];
                 $horafinal = $_POST['hora_final'];
@@ -71,7 +69,15 @@ class SessaoController
 
                 $insert = $pdo->prepare($sql);
 
-                $insert->execute([$idSolic, $iduser, $nome_paciente, $datasessao, $horainicio, $horafinal]);
+                $insert->execute([$idSolic, $iduser, $datasessao, $horainicio, $horafinal]);
+
+                $stmtUpdate = $pdo->prepare("
+                            UPDATE solicitacoes_atendimento
+                            SET solicitacoes_status = 'EM_ATENDIMENTO'
+                            WHERE id_solicitacao = ?
+                        ");
+
+                $stmtUpdate->execute([$idSolic]);
 
                 $pdo->commit();
 
@@ -99,7 +105,6 @@ class SessaoController
 
         if (!isset($_POST['id_sessao'], $_POST['status'])) {
             echo "Dados inválidos.";
-
         }
 
         $status = $_POST['status'];

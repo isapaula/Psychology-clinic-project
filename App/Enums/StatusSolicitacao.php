@@ -5,7 +5,7 @@ namespace Enums;
 enum StatusSolicitacao: string
 {
     case AGUARDANDO_TRIAGEM = 'Aguardando triagem';
-    case EM_TRIAGEM = 'Em triagem';
+    case ASSUMIDA = 'ASSUMIDA';
     case APROVADA = 'APROVADA';
     case RECUSADA = 'RECUSADA';
     case EM_ATENDIMENTO = 'Em atendimento';

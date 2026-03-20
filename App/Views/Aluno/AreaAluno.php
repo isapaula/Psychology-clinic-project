@@ -10,7 +10,7 @@
     <h1>Área do Aluno!</h1>
     <h1><?php  echo  $_SESSION['user_nome']; ?></h1>
 
-    <h3>Confira os casos disponíveis: </h3>
+    <h3>Confira os casos disponíveis para marcar uma sessão: </h3>
 
     <table border="1">
         <tr>
@@ -41,7 +41,7 @@
 
     </table>
 
-    <h3>Confira os casos que você assumiu e pode marcar uma sessão!</h3>
+    <h3>Confira suas sessões agendadas!</h3>
 
     <table border="1">
         <tr>
@@ -60,11 +60,11 @@
             <td><?=  $value['observacao_inicial'] ?></td>
             <td><?=  $value['solicitacoes_status'] ?></td>
             <td>
-                <form action="/Psychology-clinic-project/public/sessao/create" method="post">
+                <form action="/Psychology-clinic-project/public/sessao/index" method="post">
                     <input type="hidden" name="id_solicitacao" id="id_solicitacao" value="<?= $value['id_solicitacao'] ?>" >
                     <input type="hidden" name="id_solicitacao" id="id_solicitacao" value="<?= $_SESSION['id_solicitacao'] = $value['id_solicitacao'] ?>" >
                     <input type="hidden" name="nome_paciente" id="nome_paciente" value="<?= $_SESSION['nome_paciente'] = $value['nome_user'] ?>">
-                    <button type="submit">Marcar sessão</button>
+                    <button type="submit">Minhas sessões</button>
                 </form>
             </td>
         </tr>
