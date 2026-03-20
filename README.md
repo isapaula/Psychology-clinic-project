@@ -1,3 +1,11 @@
+<p align="center">Preview</p>
+
+
+https://github.com/user-attachments/assets/d12a9712-5978-43df-99ac-364861c0f87a
+
+
+
+<br>
 <p align="center"><img width="64" height="64" alt="icons864" src="https://github.com/user-attachments/assets/b57d0693-5a56-4531-a807-90565f8a2bb0" /></p>
 <h2 align="center">Sistema para universidades com curso de psicologia</h2>
 <p align="center">Versão atual: 1.0</p>
@@ -46,15 +54,38 @@ A V1 foi construída com foco em:
 * Materialize CSS
 * JavaScript
 
+# O processo
+
+Primeiramente, estabeleci quem seriam os usuários do sistema e passei a criar as classes models (Paciente, Professor, Aluno e Usuario). Então, segui para o Front controller, criando os arquivos: autoload, index, home e classe Router, para ter todas as rotas centralizadas.
+
+Após, priorizei o fluxo básico da regra de negócio, criando as classes Controllers e telas (Views) conforme a necessidade do fluxo. Por conta disso, a classe Controller do Paciente, assim como suas Views, foi criada. Depois foi criada a classe e tela da Solicitação de Atendimento. Foi durante esse processo que surgiu a necessidade de utilizar session para controlar e restringir o acesso do usuário. Então, criar as classes e telas do Aluno e Professor, pois, após feita a solicitação de atendimento, precisaria de um professor para aprovar e do aluno para marcar a primeira sessão de terapia.  
+
+Durante o processo de desenvolvimento, foi necessário corrigir vários arquivos já criados devido à falta de clareza. Para contornar isso, foi criado um fluxograma com todo o processo da clínica, fechando todas as pontas, também foi estabelecido um checklist com o que a versão 1.0 deveria contemplar. Além disso, também foram estabelecidas todas as colunas fundamentais nas tabelas do banco de dados. 
+
+# O que aprendi
+
+- Utilização de Bibliotecas do PHP com Composer para organizar dependências, mesmo em um projeto de pequeno porte.
+- Importância de utilizar checklist e priorização antes da implementação para reduzir retrabalho.
+- Uso de fluxogramas e issues para planejamento e acompanhamento das etapas do desenvolvimento.
+- Configuração do `.htaccess` para centralizar o roteamento via Front Controller.
+- Necessidade de compreender claramente as regras de negócio e o fluxo do sistema antes de iniciar a implementação.
+
+
+## Melhorias identificadas para a V2
+
+- Refatoração para camada de Service
+- Implementação de Repository Pattern
+- Ampliação da cobertura de testes automatizados
+- Melhor separação entre regras de negócio e camada de apresentação
+
 # 🔄 Roadmap (Próximos Passos)
 
 Versão 2:
 - Implementação de camada Service
 - Padrão Repository
 - Testes automatizados
-- Refatoração para melhoria de coesão
+- Refatoração para melhoria de coesão.
 
-  
 
 
 
