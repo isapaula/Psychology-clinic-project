@@ -22,7 +22,7 @@ class Router
 
         $metodo = $partes[1] ?? 'index';
 
-        $controllerClasse = "Controller\\{$controllerNome}";
+        $controllerClasse = "App\\Controller\\{$controllerNome}";
 
         if (!class_exists($controllerClasse) || !method_exists($controllerClasse, $metodo)) {
             http_response_code(404);

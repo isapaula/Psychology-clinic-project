@@ -1,5 +1,6 @@
 <?php
 
+use App\Router\Router;
 use Dotenv\Dotenv;
 
 session_start();
@@ -13,5 +14,5 @@ $path = dirname(__FILE__,2).'\\';
 $dotenv = Dotenv::createImmutable($path);
 $dotenv->load();
 
-$router = new Router\Router(); 
+$router = new Router(); 
 $router->dispatch();
