@@ -86,7 +86,7 @@ Versão 2:
 - Testes automatizados
 - Refatoração para melhoria de coesão.
 
-# Automação de testes
+# :test_tube: Automação de testes
 
 <p><strong> Os testes e2e desse projeto estão em outro repositório, por enquanto, e podem ser acessados por meio do link: https://github.com/isapaula/automacaoTestesClinica </strong></p>
 
