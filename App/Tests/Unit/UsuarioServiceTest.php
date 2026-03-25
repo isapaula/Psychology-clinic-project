@@ -29,38 +29,32 @@ class UsuarioServiceTest extends TestCase{
         $service = new UsuarioService($this->pdo);
 
         $dados = [
-            'nome' => 'Teste',
-            'email' => 'teste@email.com',
-            'senha' => '123456'
+            'nome' => 'PEDRO',
+            'email' => 'Pedro<script/><>@gmail.com',
+            'senha' => 'PeDrO@3485777'
         ];
 
         $id = $service->criarUsuario($dados, 1);
 
         $this->assertNotNull($id);
 
-        // verifica se salvou mesmo
+        
         $stmt = $this->pdo->query("SELECT * FROM usuario");
         $usuarios = $stmt->fetchAll();
 
         $this->assertCount(1, $usuarios);
-        $this->assertEquals('Teste', $usuarios[0]['nome_user']);
+        $this->assertEquals('PEDRO', $usuarios[0]['nome_user']);
+
+        $this->assertEquals('Pedroscript@gmail.com', $usuarios[0]['email_user']);
+        $this->assertNotNull($usuarios[0]['senha_user']);
+
     }
 
-    /*
-    public function testDadosEmBranco(){
-
+    public function testDeveVerificarCamposVazios(){
+   
         $service = new UsuarioService($this->pdo); 
-        
-        $dados =  [
-            'nome' => '',
-            'email' => '',
-            'senha' => '' 
-        ];
 
-        $id  = $service->criarUsuario($dados, 1);
-        
-        
+    }
 
-    }*/
 
 }
