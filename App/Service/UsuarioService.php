@@ -14,7 +14,7 @@ class UsuarioService
         $this->pdo = $pdo; 
         
     }
-
+    
     public function validacaoDados($dados){
 
         if (empty($dados['email'])) {
@@ -44,21 +44,17 @@ class UsuarioService
     public function criarUsuario($dadosUsuario, $id_perfil)
     {
 
-       $dadosUsuario = $this->validacaoDados($dadosUsuario); 
+        $dadosUsuario = $this->validacaoDados($dadosUsuario); 
 
         try {
-
-            $this->pdo->beginTransaction();
-
-            // $pdo = Conexao::getConnection();
 
             $dadosUsuario['senha'] = password_hash($dadosUsuario['senha'], PASSWORD_DEFAULT);
 
             $sql = "INSERT INTO usuario (nome_user, email_user, senha_user, id_papel)
                         VALUES (:nome, :email, :senha, :perfil);";
 
-            //$stmtUser = $pdo->prepare($sql);
 
+    
             $stmtUser = $this->pdo->prepare($sql);
 
             $stmtUser->bindValue(':nome', $dadosUsuario['nome'], \PDO::PARAM_STR);
@@ -68,11 +64,10 @@ class UsuarioService
 
             $stmtUser->execute();
 
-            // $idUsuario = $pdo->lastInsertId();
-
+    
             $idUsuario = $this->pdo->lastInsertId();
-
-            $this->pdo->commit();
+            
+    
 
             return $idUsuario;
 

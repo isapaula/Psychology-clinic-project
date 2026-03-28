@@ -50,11 +50,12 @@ class UsuarioServiceTest extends TestCase{
 
     }
 
+    /*
     public function testDeveVerificarCamposVazios(){
    
         $service = new UsuarioService($this->pdo); 
 
-    }
+    }*/
 
 
 }

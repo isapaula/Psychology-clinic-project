@@ -1,1 +1,1 @@
-{"version":2,"defects":{"UsuarioServiceTest::testDeveCriarUsuarioComSucesso":7},"times":{"UsuarioServiceTest::testDeveCriarUsuarioComSucesso":0.37}}
+{"version":2,"defects":{"UsuarioServiceTest::testDeveCriarUsuarioComSucesso":7,"UsuarioServiceTest::testDeveVerificarCamposVazios":5},"times":{"UsuarioServiceTest::testDeveCriarUsuarioComSucesso":0.066,"UsuarioServiceTest::testDeveVerificarCamposVazios":0.038}}
