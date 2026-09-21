@@ -1,10 +1,8 @@
 .env
 public/.htaccess
 vendor
-backend/vendor
-backend/vendor/
+vendor/
 .php-cs-fixer.cache
 test-results
-backend/composer.lock
 composer.lock
 comandos
