@@ -21,3 +21,6 @@ jobs:
             
             - name: Instalar dependências
               run: composer install --no-interaction --prefer-dist
+              
+            - name: Iniciar banco de dados
+              run: docker compose up -d mysql
