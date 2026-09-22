@@ -1,3 +1,8 @@
 services:
   mysql:
     image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: clinica
+    volumes:
+      - ./database/schema.sql:/docker-entrypoint-initdb.d/schema.sql
