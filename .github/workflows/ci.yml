@@ -23,7 +23,7 @@ jobs:
               run: composer install --no-interaction --prefer-dist
 
             - name: Iniciar banco de dados
-              run: docker compose up -d mysql
+              run: docker compose up -d --wait mysql
 
             - name: Verificar banco de dados
               run: |
