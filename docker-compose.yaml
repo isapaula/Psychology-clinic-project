@@ -6,3 +6,9 @@ services:
       MYSQL_DATABASE: clinica
     volumes:
       - ./database/schema.sql:/docker-entrypoint-initdb.d/schema.sql
+      
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-proot"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
