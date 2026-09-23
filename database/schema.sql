@@ -1,5 +1,3 @@
-# Comandos para criar o database completo da aplicação
-
 DROP DATABASE IF EXISTS  clinica; 
 CREATE DATABASE clinica;
 USE clinica; 
